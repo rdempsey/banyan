@@ -11,27 +11,20 @@ from time import strftime
 from lib.Weather import *
 from lib.BanyanDB import *
 
-
-def say_hello():
+# Get the application configuration
+def get_app_config():
     config = configparser.ConfigParser(interpolation = configparser.ExtendedInterpolation())
     config.read('config/config.ini')
-    g = config['Default']['Greeting']
+    return config
 
-    current_time = int(strftime("%H"))
-    if 0 < current_time < 12:
-        greeting = "Good morning {}.".format(g)
-    elif 12 < current_time < 17:
-        greeting = "Good afternoon {}.".format(g)
-    else:
-        greeting = "Good evening {}.".format(g)
+# Get the path to the BanyanDB file
+def get_banyan_db():
+    config = get_app_config()
+    return config['BanyanDatabase']['db']
 
-    system('say {}'.format(greeting))
-
-
-
-def get_the_current_weather():
-    config = configparser.ConfigParser(interpolation = configparser.ExtendedInterpolation())
-    config.read('config/config.ini')
+# Get a weather object to work with
+def get_a_weather_object():
+    config = get_app_config()
     ak = config['ForecastIO']['api_key']
     lat = config['ForecastIO']['h_lat']
     lng = config['ForecastIO']['h_long']
@@ -41,9 +34,47 @@ def get_the_current_weather():
     w.latitude = lat
     w.longitude = lng
 
+    return w
+
+# Get the greeting for the user
+def get_the_users_greeting():
+    config = get_app_config()
+    g = config['Default']['Greeting']
+    current_time = int(strftime("%H"))
+    if 0 < current_time < 12:
+        greeting = "Good morning {}.".format(g)
+    elif 12 < current_time < 17:
+        greeting = "Good afternoon {}.".format(g)
+    else:
+        greeting = "Good evening {}.".format(g)
+
+    return greeting
+
+
+# Get the current weather report
+def get_the_current_weather():
+    w = get_a_weather_object()
+    return w.get_the_current_weather_report()
+
+# Get the current weather report
+def get_the_current_forecast():
+    db = get_banyan_db()
+    w = get_a_weather_object()
+    return w.get_the_current_forecast(db)
+
+
+def say_hello():
+    db = get_banyan_db()
+    w = get_a_weather_object()
+
+    # Say hello to the user
+    system('say {}'.format(get_the_users_greeting()))
+
     # Get the current weather report
-    c = w.get_current_weather()
-    system('say {}'.format(c))
+    system('say {}'.format(w.get_the_current_weather_report()))
+
+    # Get today's forecast
+    system('say {}'.format(w.get_the_current_forecast(db)))
 
 
 def main():

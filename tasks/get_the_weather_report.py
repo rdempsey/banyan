@@ -18,18 +18,16 @@ def main():
     lat = config['ForecastIO']['h_lat']
     lng = config['ForecastIO']['h_long']
 
+    # Get the forecast for the day
     w = Weather()
     w.api_key = ak
     w.latitude = lat
     w.longitude = lng
+    f = w.get_the_current_forecast()
 
-    # Get the forecast for the day
-    f = w.get_todays_forecast()
-    print(f)
-
+    # Save it in the database
     d = BanyanDB()
     d.database = config['BanyanDatabase']['db']
-    print("Database: {}".format(d.database))
     d.save_todays_forecast(f)
 
 
