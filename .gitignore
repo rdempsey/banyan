@@ -52,3 +52,9 @@ docs/_build/
 
 # PyBuilder
 target/
+
+# Local Databases
+databases/
+
+# Custom config file
+config/config.ini
