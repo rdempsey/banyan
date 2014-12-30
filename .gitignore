@@ -58,3 +58,6 @@ databases/
 
 # Custom config file
 config/config.ini
+
+# PyCharm Files
+.idea
