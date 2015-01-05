@@ -1,10 +1,33 @@
 # Banyan
 
+## Goals
+
+    1. Be able to interact with Banyan, using voice, without having to activate an application or window.
+    2. Have Banyan run multiple simultaneous operations
+
+## Functionality
+
+    1. Be greeted by Banyan with a hello and the weather first thing in the morning.
+    2. Have Banyan remind me of events on my calendar.
+
 ## Daily Automated Tasks
 
     * Get the weather report for the day
-        * TODO
-            * Create a table in the database to store the forecast for the day
-            * Add the code to save and retrieve it
-            * Create a cron job to run the daily task
-    *
+    
+
+## Setting Up Voice Recognition
+
+    * Download PortAudio: http://www.portaudio.com/archives/pa_stable_v19_20140130.tgz
+    * Download PyAudio: http://people.csail.mit.edu/hubert/pyaudio/packages/pyaudio-0.2.8.tar.gz
+    * Unpack PyAudio. This will create a folder named PyAudio-0.2.8
+    * Unpack PortAudio, rename the folder to portaudio-v19, and move it into the PyAudio-0.2.8 folder
+    * CD into the portaudio-v19 folder and run the following to build and install PortAudio:
+        * ./configure
+        * make
+        * sudo make install
+    * CD up into the PyAudio-0.2.8 folder and run the following to install PyAudio:
+        * python setup.py build --static-link
+        * python setup.py install
+    or ...
+    
+    * Use the built-in dictation features of Mac OS and use an external application to activate it
