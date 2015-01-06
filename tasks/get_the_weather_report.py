@@ -7,8 +7,8 @@ Copyright (c) 2014 Robert Dempsey. All rights reserved.
 """
 
 import configparser
-from lib.Weather import *
-from lib.BanyanDB import *
+from bin.Weather import *
+from bin.BanyanDB import *
 
 
 def main():

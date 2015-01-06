@@ -7,7 +7,7 @@ Copyright (c) 2014 Robert Dempsey. All rights reserved.
 """
 
 import forecastio
-from lib.BanyanDB import *
+from bin.BanyanDB import *
 
 
 class Weather:
