@@ -13,6 +13,7 @@ import time
 from tzlocal import get_localzone
 from lib.Weather import *
 from lib.BanyanDB import *
+import readline
 
 single_lock = threading.Lock()
 

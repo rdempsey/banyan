@@ -1,14 +1,21 @@
 # Banyan
 
-## Goals
+## Major Goals
 
     1. Be able to interact with Banyan, using voice, without having to activate an application or window.
-    2. Have Banyan run multiple simultaneous operations
 
-## Functionality
+## Desired Functionality
 
-    1. Be greeted by Banyan with a hello and the weather first thing in the morning.
-    2. Have Banyan remind me of events on my calendar.
+    1. Have Banyan remind me of events on my calendar.
+    
+## Current Functionality
+
+    Note: Banyan currently takes the form of a multi-threaded console application. Some functions can run simultaneously
+          while others require the current process to finish first.
+
+    1. Say good {morning, afternoon, evening} at the appropriate time
+    2. Provide the current weather report from Forecast.io
+    3. Provide the current day's weather forecast from Forecast.io
 
 ## Daily Automated Tasks
 
