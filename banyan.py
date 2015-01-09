@@ -13,7 +13,10 @@ import time
 from tzlocal import get_localzone
 from bin.Weather import *
 from bin.BanyanDB import *
+from bin.Greeting import *
+from bin.BankAccount import *
 import readline
+
 
 single_lock = threading.Lock()
 
@@ -28,6 +31,11 @@ def get_banyan_db():
     config = get_app_config()
     return config['BanyanDatabase']['db']
 
+# Get the user's greeting
+def get_users_greeting():
+    config = get_app_config()
+    return config['Default']['greeting']
+
 
 # Get the local timezone
 def get_local_timezone():
@@ -36,17 +44,16 @@ def get_local_timezone():
 
 # Get the greeting for the user
 def say_hello():
-    config = get_app_config()
-    g = config['Default']['greeting']
     current_time = int(time.strftime("%H"))
-    if 0 < current_time < 12:
-        greeting = "Good morning {}.".format(g)
-    elif 12 <= current_time < 17:
-        greeting = "Good afternoon {}.".format(g)
-    else:
-        greeting = "Good evening {}.".format(g)
+    greeting = get_users_greeting()
+    notified_of_the_weather = 1
+    g = Greeting(current_time, greeting, notified_of_the_weather)
+    g.greet_the_user()
 
-    system('say {}'.format(greeting))
+# Say goodbye to the user
+def say_goodbye():
+    greeting = get_users_greeting()
+    system('say Good bye {}'.format(greeting))
 
 # Get a weather object to work with
 def get_a_weather_object():
@@ -89,7 +96,7 @@ class Banyan(cmd.Cmd):
 
     def do_goodbye(self, arg):
         'Close Banyan and exit: GOODBYE'
-        print('Thank you for using Banyan')
+        say_goodbye()
         return True
 
     def do_good(self, arg):
