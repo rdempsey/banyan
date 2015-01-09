@@ -14,36 +14,23 @@ from tzlocal import get_localzone
 
 single_lock = threading.Lock()
 
-# Get the application configuration
-def get_app_config():
-    config = configparser.ConfigParser(interpolation = configparser.ExtendedInterpolation())
-    config.read('config/config.ini')
-    return config
-
-# Get the local timezone
-def get_local_timezone():
-    return str(get_localzone())
-
-# Get a weather object to work with
-def get_a_weather_object():
-    config = get_app_config()
-    ak = config['ForecastIO']['api_key']
-    lat = config['ForecastIO']['h_lat']
-    lng = config['ForecastIO']['h_long']
-
-    w = Weather()
-    w.api_key = ak
-    w.latitude = lat
-    w.longitude = lng
-    w.timezone = get_local_timezone()
-
-    return w
-
 class CurrentWeather(threading.Thread):
     # Get the current weather report
     def run(self):
         single_lock.acquire()
-        w = get_a_weather_object()
+        config = configparser.ConfigParser(interpolation = configparser.ExtendedInterpolation())
+        config.read('config/config.ini')
+
+        ak = config['ForecastIO']['api_key']
+        lat = config['ForecastIO']['h_lat']
+        lng = config['ForecastIO']['h_long']
+
+        w = Weather()
+        w.api_key = ak
+        w.latitude = lat
+        w.longitude = lng
+        w.timezone = str(get_localzone())
+
         system('say {}'.format(w.get_the_current_weather_report()))
         single_lock.release()
 

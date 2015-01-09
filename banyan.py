@@ -14,7 +14,6 @@ from tzlocal import get_localzone
 from bin.Weather import *
 from bin.BanyanDB import *
 from bin.Greeting import *
-from bin.BankAccount import *
 import readline
 
 
