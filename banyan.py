@@ -7,6 +7,7 @@ Copyright (c) 2015 Robert Dempsey. All rights reserved.
 """
 
 from os import system
+import os
 import cmd
 import time
 from bin.Greeting import *
@@ -42,31 +43,40 @@ class Banyan(cmd.Cmd):
     prompt = 'Banyan > '
     app_state = AppState()
 
-    def show_app_state(self):
-        print("date_of_last_weather_notification: {}".format(self.app_state.date_of_last_weather_notification))
-
+    # When Banyan starts, greet the user
     def preloop(self):
-        # When the user logs on, say hello
         self.app_state.restore_application_state()
         say_hello(self.app_state)
+        # if self.app_state.user_greeted == False:
+        #     say_hello(self.app_state)
 
+    # On exit, save the application state and say goodbye
     def postloop(self):
         self.app_state.save_application_state()
         say_goodbye()
 
     def do_good(self, arg):
+        'Say hello to Banyan and Banyan will say hello to you: GOOD {morning, afternoon, evening}'
         say_hello(self.app_state)
+
+    def do_current(self, arg):
+        ' Get the current weather or the weather forecast for the day: CURRENT {weather, forecast}'
+        if arg.lower() == "weather":
+            CurrentWeather().start()
+        elif arg.lower() == "forecast":
+            CurrentForecast().start()
+
+    def do_restart(self, arg):
+        'Immediately saves the application state and restarts Banyan: RESTART'
+        config = get_app_config()
+        file = config['FileLocations']['scripts'] + "restart.sh"
+        self.app_state.save_application_state()
+        os.execl(file, '')
 
     def do_bye(self, arg):
         'Close Banyan and exit: GOODBYE'
         return True
 
-    def do_current(self, arg):
-        ' Get the current weather or weather forecast: CURRENT {weather, forecast}'
-        if arg.lower() == "weather":
-            CurrentWeather().start()
-        elif arg.lower() == "forecast":
-            CurrentForecast().start()
 
 def main():
     Banyan().cmdloop()

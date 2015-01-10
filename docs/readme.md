@@ -20,6 +20,17 @@
 ## Daily Automated Tasks
 
     * Get the weather report for the day
+
+
+## Requirements
+
+    * Python 2.7.x
+    * PEAK-Rules: http://peak.telecommunity.com/DevCenter/PEAK-Rules
+    * sqlite3
+    # configparser
+    * forecastio
+
+    * Allow osascript to use accessibility features: sudo sqlite3 /Library/Application\ Support/com.apple.TCC/TCC.db "INSERT or REPLACE INTO access VALUES('kTCCServiceAccessibility','com.apple.RemoteDesktopAgent',1,1,1,NULL)"
     
 
 ## Setting Up Voice Recognition

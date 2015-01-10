@@ -78,16 +78,19 @@ class Greeting:
     @when(greet_the_user, "0<self.current_time and self.current_time<12")
     def morning_greeting(self, app_state):
         system('say {} {}'.format("Good morning", self.greeting))
+        self.app_state.user_greeted = True
 
     # Between noon and 5 is afternoon
     @when(greet_the_user, "12<=self.current_time and self.current_time<17")
     def afternoon_greeting(self, app_state):
         system('say {} {}'.format("Good afternoon", self.greeting))
+        self.app_state.user_greeted = True
 
     # Between 5 and midnight is evening
     @when(greet_the_user, "17<=self.current_time and self.current_time<=24")
     def evening_greeting(self, app_state):
         system('say {} {}'.format("Good evening", self.greeting))
+        self.app_state.user_greeted = True
 
     # If it's in the morning, and the user hasn't yet heard the weather and forecast, tell them
     @after(greet_the_user, "0<self.current_time and self.current_time<12 and self.app_state.date_of_last_weather_notification<str(time.strftime('%Y-%m-%d'))")

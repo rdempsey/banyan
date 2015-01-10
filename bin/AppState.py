@@ -28,20 +28,36 @@ class AppState:
     def date_of_last_weather_notification(self):
         del self.properties['date_of_last_weather_notification']
 
+    # Whether or not the user has been greeted. On restart, we don't need to greet the user again.
+    @property
+    def user_greeted(self):
+        return self.properties.get('user_greeted', False)
+
+    @user_greeted.setter
+    def user_greeted(self, s):
+        self.properties['user_greeted'] = s
+
+    @user_greeted.deleter
+    def user_greeted(self):
+        del self.properties['user_greeted']
+
 
     def create_initial_state_file(self):
         shelf_file = shelve.open('config/app_state')
         shelf_file['date_of_last_weather_notification'] = '1900-01-01'
+        shelf_file['user_greeted'] = False
         shelf_file.close()
 
     # Save the application state using shelve
     def save_application_state(self):
         shelf_file = shelve.open('config/app_state')
         shelf_file['date_of_last_weather_notification'] = self.date_of_last_weather_notification
+        shelf_file['user_greeted'] = self.user_greeted
         shelf_file.close()
 
     # Restore the application state using shelve
     def restore_application_state(self):
         shelf_file = shelve.open('config/app_state')
         self.date_of_last_weather_notification = shelf_file['date_of_last_weather_notification']
+        self.user_greeted = shelf_file['user_greeted']
         shelf_file.close()
