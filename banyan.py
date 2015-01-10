@@ -8,16 +8,11 @@ Copyright (c) 2015 Robert Dempsey. All rights reserved.
 
 from os import system
 import cmd
-import threading
 import time
-from tzlocal import get_localzone
-from bin.Weather import *
-from bin.BanyanDB import *
 from bin.Greeting import *
-import readline
+from bin.AppState import *
 
 
-single_lock = threading.Lock()
 
 # Get the application configuration
 def get_app_config():
@@ -25,82 +20,43 @@ def get_app_config():
     config.read('config/config.ini')
     return config
 
-# Get the path to the BanyanDB file
-def get_banyan_db():
-    config = get_app_config()
-    return config['BanyanDatabase']['db']
-
 # Get the user's greeting
 def get_users_greeting():
     config = get_app_config()
     return config['Default']['greeting']
 
 
-# Get the local timezone
-def get_local_timezone():
-    return str(get_localzone())
-
-
 # Get the greeting for the user
-def say_hello():
+def say_hello(app_state):
     current_time = int(time.strftime("%H"))
     greeting = get_users_greeting()
-    notified_of_the_weather = 1
-    g = Greeting(current_time, greeting, notified_of_the_weather)
-    g.greet_the_user()
+    g = Greeting(app_state, current_time, greeting)
+    g.greet_the_user(app_state)
 
 # Say goodbye to the user
 def say_goodbye():
     greeting = get_users_greeting()
     system('say Good bye {}'.format(greeting))
 
-# Get a weather object to work with
-def get_a_weather_object():
-    config = get_app_config()
-    ak = config['ForecastIO']['api_key']
-    lat = config['ForecastIO']['h_lat']
-    lng = config['ForecastIO']['h_long']
-
-    w = Weather()
-    w.api_key = ak
-    w.latitude = lat
-    w.longitude = lng
-    w.timezone = get_local_timezone()
-
-    return w
-
-
-class CurrentWeather(threading.Thread):
-    # Get the current weather report
-    def run(self):
-        single_lock.acquire()
-        w = get_a_weather_object()
-        system('say {}'.format(w.get_the_current_weather_report()))
-        single_lock.release()
-
-
-class CurrentForecast(threading.Thread):
-    # Get the current weather report
-    def run(self):
-        single_lock.acquire()
-        db = get_banyan_db()
-        w = get_a_weather_object()
-        system('say {}'.format(w.get_the_current_forecast(db)))
-        single_lock.release()
-
 
 class Banyan(cmd.Cmd):
     intro = 'Welcome to Banyan. Type help or ? to list commands.\n'
     prompt = 'Banyan > '
+    app_state = AppState()
+
+    def preloop(self):
+        self.app_state.restore_application_state()
 
     def do_goodbye(self, arg):
         'Close Banyan and exit: GOODBYE'
+        self.app_state.save_application_state()
         say_goodbye()
         return True
 
     def do_good(self, arg):
         'Say hello: GOOD {morning, afternoon, evening}'
-        say_hello()
+        say_hello(self.app_state)
+
 
     def do_current(self, arg):
         ' Get the current weather or weather forecast: CURRENT {weather, forecast}'
