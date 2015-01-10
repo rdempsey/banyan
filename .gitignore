@@ -56,8 +56,9 @@ target/
 # Local Databases
 databases/
 
-# Custom config file
+# Custom config and app state files
 config/config.ini
+config/app_state.db
 
 # PyCharm Files
 .idea
