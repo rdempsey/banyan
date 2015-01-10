@@ -13,7 +13,6 @@ class AppState:
     def __init__(self, **kwargs):
         self.properties = kwargs
         if not os.path.exists('config/app_state.db'):
-            print("Creating a new state file")
             self.create_initial_state_file()
 
     # Whether or not the user was notified of the weather
