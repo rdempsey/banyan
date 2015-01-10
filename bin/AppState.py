@@ -7,10 +7,14 @@ Copyright (c) 2015 Robert Dempsey. All rights reserved.
 """
 
 import shelve
+import os.path
 
 class AppState:
     def __init__(self, **kwargs):
         self.properties = kwargs
+        if not os.path.exists('config/app_state.db'):
+            print("Creating a new state file")
+            self.create_initial_state_file()
 
     # Whether or not the user was notified of the weather
     @property
@@ -64,6 +68,14 @@ class AppState:
     def date_of_last_forecast_notification(self):
         del self.properties['date_of_last_forecast_notification']
 
+    def create_initial_state_file(self):
+        shelf_file = shelve.open('config/app_state')
+        shelf_file['notified_of_the_weather'] = 0
+        shelf_file['notified_of_the_forecast'] = 0
+        shelf_file['date_of_last_weather_notification'] = 'Never'
+        shelf_file['date_of_last_forecast_notification'] = 'Never'
+        shelf_file.close()
+
     # Save the application state using shelve
     def save_application_state(self):
         shelf_file = shelve.open('config/app_state')
@@ -72,7 +84,6 @@ class AppState:
         shelf_file['date_of_last_weather_notification'] = self.date_of_last_weather_notification
         shelf_file['date_of_last_forecast_notification'] = self.date_of_last_forecast_notification
         shelf_file.close()
-        print("Shelf file closed with weather notification: {}".format(self.notified_of_the_weather))
 
     # Restore the application state using shelve
     def restore_application_state(self):
@@ -82,4 +93,3 @@ class AppState:
         self.date_of_last_weather_notification = shelf_file['date_of_last_weather_notification']
         self.date_of_last_forecast_notification = shelf_file['date_of_last_forecast_notification']
         shelf_file.close()
-        print("Shelf file opened with weather notification: {}".format(self.notified_of_the_weather))
