@@ -48,7 +48,6 @@ class Banyan(cmd.Cmd):
     def preloop(self):
         # When the user logs on, say hello
         self.app_state.restore_application_state()
-        # self.app_state.date_of_last_weather_notification = '2015-01-07'
         say_hello(self.app_state)
 
     def postloop(self):
