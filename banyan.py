@@ -52,7 +52,6 @@ class Banyan(cmd.Cmd):
 
     def postloop(self):
         self.app_state.save_application_state()
-        self.show_app_state()
         say_goodbye()
 
     def do_good(self, arg):
