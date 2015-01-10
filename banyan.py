@@ -12,8 +12,6 @@ import time
 from bin.Greeting import *
 from bin.AppState import *
 
-
-
 # Get the application configuration
 def get_app_config():
     config = configparser.ConfigParser(interpolation = configparser.ExtendedInterpolation())
@@ -44,19 +42,26 @@ class Banyan(cmd.Cmd):
     prompt = 'Banyan > '
     app_state = AppState()
 
+    def show_app_state(self):
+        print("date_of_last_weather_notification: {}".format(self.app_state.date_of_last_weather_notification))
+
     def preloop(self):
+        # When the user logs on, say hello
         self.app_state.restore_application_state()
-
-    def do_goodbye(self, arg):
-        'Close Banyan and exit: GOODBYE'
-        self.app_state.save_application_state()
-        say_goodbye()
-        return True
-
-    def do_good(self, arg):
-        'Say hello: GOOD {morning, afternoon, evening}'
+        # self.app_state.date_of_last_weather_notification = '2015-01-07'
         say_hello(self.app_state)
 
+    def postloop(self):
+        self.app_state.save_application_state()
+        self.show_app_state()
+        say_goodbye()
+
+    def do_good(self, arg):
+        say_hello(self.app_state)
+
+    def do_bye(self, arg):
+        'Close Banyan and exit: GOODBYE'
+        return True
 
     def do_current(self, arg):
         ' Get the current weather or weather forecast: CURRENT {weather, forecast}'

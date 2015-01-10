@@ -10,6 +10,7 @@ from os import system
 from peak.rules import abstract, when, around, before, after
 from bin.Weather import *
 import threading
+import time
 from tzlocal import get_localzone
 
 single_lock = threading.Lock()
@@ -88,12 +89,12 @@ class Greeting:
     def evening_greeting(self, app_state):
         system('say {} {}'.format("Good evening", self.greeting))
 
-    # When the user hasn't been notified of the current weather
-    @after(greet_the_user, "self.app_state.notified_of_the_weather==0")
+    # If it's in the morning, and the user hasn't yet heard the weather and forecast, tell them
+    @after(greet_the_user, "0<self.current_time and self.current_time<12 and self.app_state.date_of_last_weather_notification<str(time.strftime('%Y-%m-%d'))")
     def weather_greeting(self, app_state):
-        print("From Greeting: {}".format(app_state.notified_of_the_weather))
         CurrentWeather().start()
-        app_state.notified_of_the_weather = 1
+        CurrentForecast().start()
+        app_state.date_of_last_weather_notification = str(time.strftime("%Y-%m-%d"))
 
 if __name__ == '__main__':
     pass
