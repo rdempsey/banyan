@@ -22,9 +22,10 @@
 
 ## Functionality On The Agenda
 
-    1. Add alerting via SMS
-    2. Send an SMS alert when an application error occurs
-    3. Have Banyan run as a daemon that can be started, stopped and reloaded (once voice commands are possible)
+    1. Use the user_greeted portion of the app_state so that we don't greet a user on restart. Set it to False if shutting down.
+    2. Add alerting via SMS
+    3. Send an SMS alert when an application error occurs
+    4. Have Banyan run as a daemon that can be started, stopped and reloaded (once voice commands are possible)
     
 
 ## Daily Scheduled Tasks

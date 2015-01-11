@@ -17,7 +17,7 @@ import configparser
 single_lock = threading.Lock()
 
 
-# Get the application config file
+# Return the application configuration
 def get_app_config():
     config = configparser.ConfigParser(interpolation = configparser.ExtendedInterpolation())
     config.read('config/config.ini')
@@ -30,17 +30,13 @@ def get_banyan_db():
     return config['BanyanDatabase']['db']
 
 
-# Get a weather object to work with
+# Return a weather object
 def get_a_weather_object():
     config = get_app_config()
-    ak = config['ForecastIO']['api_key']
-    lat = config['ForecastIO']['h_lat']
-    lng = config['ForecastIO']['h_long']
-
     w = Weather()
-    w.api_key = ak
-    w.latitude = lat
-    w.longitude = lng
+    w.api_key = config['ForecastIO']['api_key']
+    w.latitude = config['ForecastIO']['h_lat']
+    w.longitude = config['ForecastIO']['h_long']
     w.timezone = str(get_localzone())
 
     return w
@@ -67,7 +63,7 @@ class SayCurrentForecast(threading.Thread):
         single_lock.release()
 
 
-# Say the current weather forecast
+# Get the current weather forecast; used by a scheduled task for retrieving the latest forecast
 class GetCurrentForecast(threading.Thread):
     # Get the current weather report
     def run(self):
@@ -81,7 +77,7 @@ class Weather:
     def __init__(self, **kwargs):
         self.properties = kwargs
 
-    # API Key
+    # Forecast.io API Key
     @property
     def api_key(self):
         return self.properties.get('api_key', 'None')
@@ -133,6 +129,7 @@ class Weather:
     def timezone(self):
         del self.properties['timezone']
 
+    # Get the current weathe report from Forecast.io
     def get_the_current_weather_report(self):
         forecast = forecastio.load_forecast(self.api_key, self.latitude, self.longitude)
         c = forecast.currently()
@@ -141,6 +138,7 @@ class Weather:
         c_precip = round(c.precipProbability * 100)
         return "It is currently {} degrees and {} with a {} percent chance of precipitation.".format(c_temp, c_summary, c_precip)
 
+    # Get the current forecast; if it's in the database use that, otherwise go to Forecast.io and get the latest
     def get_the_current_forecast(self, database):
         # Check the database to see if we already have the current forecast
         d = BanyanDB()

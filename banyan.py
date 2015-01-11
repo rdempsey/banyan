@@ -51,7 +51,7 @@ class Banyan(cmd.Cmd):
     app_state = AppState()
     scheduler = BackgroundScheduler()
 
-    # When Banyan starts, greet the user
+    # When Banyan starts restore the application state, start the background job scheduler, and greet the user
     def preloop(self):
         # Restore the application state
         self.app_state.restore_application_state()

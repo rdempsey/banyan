@@ -28,7 +28,8 @@ class AppState:
     def date_of_last_weather_notification(self):
         del self.properties['date_of_last_weather_notification']
 
-    # Whether or not the user has been greeted. On restart, we don't need to greet the user again.
+    # Whether or not the user has been greeted. Default: false
+    # On restart, we don't need to greet the user again.
     @property
     def user_greeted(self):
         return self.properties.get('user_greeted', False)
@@ -42,6 +43,7 @@ class AppState:
         del self.properties['user_greeted']
 
 
+    # Create an initial state file and set defaults
     def create_initial_state_file(self):
         shelf_file = shelve.open('config/app_state')
         shelf_file['date_of_last_weather_notification'] = '1900-01-01'

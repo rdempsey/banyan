@@ -27,6 +27,7 @@ class BanyanDB:
     def database(self):
         del self.properties['database']
 
+    # Save a forecast in the database
     def save_todays_forecast(self, forecast, weather):
         conn = sqlite3.connect(self.database)
         cursor = conn.cursor()
@@ -45,6 +46,7 @@ class BanyanDB:
             conn.close()
             return "Forecast saved"
 
+    # Get the current day's weather forecast from the database; return none if none is found
     def get_todays_weather_forecast(self):
         conn = sqlite3.connect(self.database)
         cursor = conn.cursor()

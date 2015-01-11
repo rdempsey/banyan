@@ -25,19 +25,19 @@ class Greeting:
     def greet_the_user(self, app_state):
         """ A generic function for greeting the user """
 
-    # Between midnight and noon is morning
+    # If it's between midnight and noon say good morning
     @when(greet_the_user, "0<self.current_time and self.current_time<12")
     def morning_greeting(self, app_state):
         system('say {} {}'.format("Good morning", self.greeting))
         self.app_state.user_greeted = True
 
-    # Between noon and 5 is afternoon
+    # If it's between noon and 5pm say good afternoon
     @when(greet_the_user, "12<=self.current_time and self.current_time<17")
     def afternoon_greeting(self, app_state):
         system('say {} {}'.format("Good afternoon", self.greeting))
         self.app_state.user_greeted = True
 
-    # Between 5 and midnight is evening
+    # If it's between 5 and midnight say good evening
     @when(greet_the_user, "17<=self.current_time and self.current_time<=24")
     def evening_greeting(self, app_state):
         system('say {} {}'.format("Good evening", self.greeting))
