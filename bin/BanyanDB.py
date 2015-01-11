@@ -6,9 +6,7 @@ Created by Robert Dempsey on 12/30/14.
 Copyright (c) 2014 Robert Dempsey. All rights reserved.
 """
 
-import os
 import sqlite3
-import configparser
 from datetime import datetime
 from time import strftime
 

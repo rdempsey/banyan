@@ -34,13 +34,16 @@ def greet_the_user(app_state):
     g = Greeting(app_state, current_time, greeting)
     g.greet_the_user(app_state)
 
+
 # Say goodbye to the user
 def say_goodbye():
     greeting = get_users_greeting()
     system('say Good bye {}'.format(greeting))
 
+# Get the current weather forecast; used as a scheduled task to ensure the database has the latest
 def get_the_weather_forecast():
-    GetDailyWeatherForecast().start()
+    GetCurrentForecast().start()
+
 
 class Banyan(cmd.Cmd):
     intro = 'Welcome to Banyan. Type help or ? to list commands.\n'
@@ -52,7 +55,7 @@ class Banyan(cmd.Cmd):
     def preloop(self):
         # Restore the application state
         self.app_state.restore_application_state()
-        # Start the task scheduler to get the current forecast. Run it every 30 minutes
+        # Start the task scheduler to get the current forecast. Run it every 30 minutes (1800 seconds)
         self.scheduler.add_job(get_the_weather_forecast, 'interval', seconds=1800)
         self.scheduler.start()
         # Greet the user
@@ -70,9 +73,9 @@ class Banyan(cmd.Cmd):
     def do_current(self, arg):
         ' Get the current weather or the weather forecast for the day: CURRENT {weather|forecast}'
         if arg.lower() == "weather":
-            CurrentWeather().start()
+            SayCurrentWeather().start()
         elif arg.lower() == "forecast":
-            CurrentForecast().start()
+            SayCurrentForecast().start()
 
     def do_restart(self, arg):
         'Immediately saves the application state and restarts Banyan: RESTART'

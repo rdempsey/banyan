@@ -6,48 +6,77 @@ Created by Robert Dempsey on 12/30/14.
 Copyright (c) 2014 Robert Dempsey. All rights reserved.
 """
 
+from os import system
 import forecastio
 from bin.BanyanDB import *
 import threading
+import time
+from tzlocal import get_localzone
+import configparser
 
 single_lock = threading.Lock()
 
-# Get the daily
-class GetDailyWeatherForecast(threading.Thread):
+
+# Get the application config file
+def get_app_config():
+    config = configparser.ConfigParser(interpolation = configparser.ExtendedInterpolation())
+    config.read('config/config.ini')
+    return config
+
+
+# Get the path to the BanyanDB file
+def get_banyan_db():
+    config = get_app_config()
+    return config['BanyanDatabase']['db']
+
+
+# Get a weather object to work with
+def get_a_weather_object():
+    config = get_app_config()
+    ak = config['ForecastIO']['api_key']
+    lat = config['ForecastIO']['h_lat']
+    lng = config['ForecastIO']['h_long']
+
+    w = Weather()
+    w.api_key = ak
+    w.latitude = lat
+    w.longitude = lng
+    w.timezone = str(get_localzone())
+
+    return w
+
+
+# Say the current weather report
+class SayCurrentWeather(threading.Thread):
     # Get the current weather report
     def run(self):
-
-        # Check to see if we have the weather forecast for the day
-        config = configparser.ConfigParser(interpolation = configparser.ExtendedInterpolation())
-        config.read('config/config.ini')
-
-        d = BanyanDB()
-        d.database = config['BanyanDatabase']['db']
-
-        w = Weather()
-
-        current_forecast = w.get_the_current_forecast(d)
-
-        if current_forecast is None:
-            # Get the forecast for the day
-            single_lock.acquire()
-
-            ak = config['ForecastIO']['api_key']
-            lat = config['ForecastIO']['h_lat']
-            lng = config['ForecastIO']['h_long']
-
-            w.api_key = ak
-            w.latitude = lat
-            w.longitude = lng
-            f = w.get_the_current_forecast()
-
-            d.save_todays_forecast(f)
-            single_lock.release()
-        else:
-            pass
+        single_lock.acquire()
+        w = get_a_weather_object()
+        system('say {}'.format(w.get_the_current_weather_report()))
+        single_lock.release()
 
 
+# Say the current weather forecast
+class SayCurrentForecast(threading.Thread):
+    # Get the current weather report
+    def run(self):
+        single_lock.acquire()
+        db = get_banyan_db()
+        w = get_a_weather_object()
+        system('say {}'.format(w.get_the_current_forecast(db)))
+        single_lock.release()
 
+
+# Say the current weather forecast
+class GetCurrentForecast(threading.Thread):
+    # Get the current weather report
+    def run(self):
+        db = get_banyan_db()
+        w = get_a_weather_object()
+        w.get_the_current_forecast(db)
+
+
+# Weather class
 class Weather:
     def __init__(self, **kwargs):
         self.properties = kwargs
@@ -134,7 +163,6 @@ class Weather:
             return t_forecast
         else:
             return current_forecast
-
 
 
 if __name__ == '__main__':
