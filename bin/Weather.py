@@ -26,7 +26,7 @@ class GetDailyWeatherForecast(threading.Thread):
 
         w = Weather()
 
-        current_forecast = w.get_the_current_forecast()
+        current_forecast = w.get_the_current_forecast(d)
 
         if current_forecast is None:
             # Get the forecast for the day
