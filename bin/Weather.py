@@ -8,6 +8,44 @@ Copyright (c) 2014 Robert Dempsey. All rights reserved.
 
 import forecastio
 from bin.BanyanDB import *
+import threading
+
+single_lock = threading.Lock()
+
+# Get the daily
+class GetDailyWeatherForecast(threading.Thread):
+    # Get the current weather report
+    def run(self):
+
+        # Check to see if we have the weather forecast for the day
+        config = configparser.ConfigParser(interpolation = configparser.ExtendedInterpolation())
+        config.read('config/config.ini')
+
+        d = BanyanDB()
+        d.database = config['BanyanDatabase']['db']
+
+        w = Weather()
+
+        current_forecast = w.get_the_current_forecast()
+
+        if current_forecast is None:
+            # Get the forecast for the day
+            single_lock.acquire()
+
+            ak = config['ForecastIO']['api_key']
+            lat = config['ForecastIO']['h_lat']
+            lng = config['ForecastIO']['h_long']
+
+            w.api_key = ak
+            w.latitude = lat
+            w.longitude = lng
+            f = w.get_the_current_forecast()
+
+            d.save_todays_forecast(f)
+            single_lock.release()
+        else:
+            pass
+
 
 
 class Weather:

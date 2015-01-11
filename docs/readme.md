@@ -4,6 +4,7 @@
 
     1. Be able to interact with Banyan, using voice, without having to activate an application or window.
     2. Be able to update Banyan's codebase and reload it without having to call "python banyan.sh" to do so.
+    3. Be able to perform multiple tasks simultaneously while continuously accepting user input
     
 
 ## Current Functionality
