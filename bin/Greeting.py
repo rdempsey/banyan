@@ -10,8 +10,6 @@ from os import system
 from peak.rules import abstract, when, around, before, after
 from bin.Weather import *
 
-single_lock = threading.Lock()
-
 
 class Greeting:
     def __init__(self, app_state, current_time, greeting):

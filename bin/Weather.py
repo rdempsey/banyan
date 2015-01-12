@@ -38,7 +38,6 @@ def get_a_weather_object():
     w.latitude = config['ForecastIO']['h_lat']
     w.longitude = config['ForecastIO']['h_long']
     w.timezone = str(get_localzone())
-
     return w
 
 
@@ -129,7 +128,7 @@ class Weather:
     def timezone(self):
         del self.properties['timezone']
 
-    # Get the current weathe report from Forecast.io
+    # Get the current weather report from Forecast.io
     def get_the_current_weather_report(self):
         forecast = forecastio.load_forecast(self.api_key, self.latitude, self.longitude)
         c = forecast.currently()

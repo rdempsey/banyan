@@ -77,6 +77,7 @@ class Banyan(cmd.Cmd):
         elif arg.lower() == "forecast":
             SayCurrentForecast().start()
 
+
     def do_restart(self, arg):
         'Immediately saves the application state and restarts Banyan: RESTART'
         config = get_app_config()
