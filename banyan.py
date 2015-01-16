@@ -32,6 +32,8 @@ def greet_the_user(app_state):
     current_time = int(time.strftime("%H"))
     greeting = get_users_greeting()
     g = Greeting(app_state, current_time, greeting)
+    print("greet_the_user - current_time: {}".format(current_time))
+    print("greet_the_user - date_of_last_weather_notification: {}".format(app_state.date_of_last_weather_notification))
     g.greet_the_user(app_state)
 
 
@@ -44,6 +46,9 @@ def say_goodbye():
 def get_the_weather_forecast():
     GetCurrentForecast().start()
 
+# Update the daily weather notification; used as a scheduled task so that when I say good morning to Banyan
+# it automatically tells me the current weather and forecast
+
 
 class Banyan(cmd.Cmd):
     intro = 'Welcome to Banyan. Type help or ? to list commands.\n'
@@ -55,6 +60,8 @@ class Banyan(cmd.Cmd):
     def preloop(self):
         # Restore the application state
         self.app_state.restore_application_state()
+        print("preloop - date_of_last_weather_notification: {}".format(self.app_state.date_of_last_weather_notification))
+        # self.app_state.date_of_last_weather_notification = '2015-01-15'
         # Start the task scheduler to get the current forecast. Run it every 30 minutes (1800 seconds)
         self.scheduler.add_job(get_the_weather_forecast, 'interval', seconds=1800)
         self.scheduler.start()

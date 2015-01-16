@@ -7,6 +7,7 @@ Copyright (c) 2015 Robert Dempsey. All rights reserved.
 """
 
 from os import system
+from time import strftime
 from peak.rules import abstract, when, around, before, after
 from bin.Weather import *
 
@@ -28,6 +29,7 @@ class Greeting:
     def morning_greeting(self, app_state):
         system('say {} {}'.format("Good morning", self.greeting))
         self.app_state.user_greeted = True
+        print("morning-greeting - date_of_last_weather_notification: {}".format(self.app_state.date_of_last_weather_notification))
 
     # If it's between noon and 5pm say good afternoon
     @when(greet_the_user, "12<=self.current_time and self.current_time<17")
@@ -42,11 +44,13 @@ class Greeting:
         self.app_state.user_greeted = True
 
     # If it's in the morning, and the user hasn't yet heard the weather and forecast, tell them
-    @after(greet_the_user, "0<self.current_time and self.current_time<12 and self.app_state.date_of_last_weather_notification<str(time.strftime('%Y-%m-%d'))")
+    @after(greet_the_user, "0<self.current_time and self.current_time<12 and self.app_state.date_of_last_weather_notification<>str(strftime('%Y-%m-%d'))")
     def weather_greeting(self, app_state):
         SayCurrentWeather().start()
         SayCurrentForecast().start()
         app_state.date_of_last_weather_notification = str(time.strftime("%Y-%m-%d"))
+        print("after_weather_greeting - date_of_last_weather_notification: {}".format(self.app_state.date_of_last_weather_notification))
+
 
 if __name__ == '__main__':
     pass
