@@ -14,6 +14,7 @@ from bin.Greeting import *
 from bin.AppState import *
 from bin.Weather import *
 from apscheduler.schedulers.background import BackgroundScheduler
+from birdy.twitter import UserClient
 
 # Get the application configuration
 def get_app_config():
@@ -30,10 +31,9 @@ def get_users_greeting():
 # Get the greeting for the user
 def greet_the_user(app_state):
     current_time = int(time.strftime("%H"))
+    current_date = str(strftime('%Y-%m-%d'))
     greeting = get_users_greeting()
-    g = Greeting(app_state, current_time, greeting)
-    print("greet_the_user - current_time: {}".format(current_time))
-    print("greet_the_user - date_of_last_weather_notification: {}".format(app_state.date_of_last_weather_notification))
+    g = Greeting(app_state, current_time, current_date, greeting)
     g.greet_the_user(app_state)
 
 
@@ -42,13 +42,30 @@ def say_goodbye():
     greeting = get_users_greeting()
     system('say Good bye {}'.format(greeting))
 
-# Get the current weather forecast; used as a scheduled task to ensure the database has the latest
+##
+# Scheduled Tasks
+##
+
+# Get the current weather forecast; happens every 30 minutes
 def get_the_weather_forecast():
     GetCurrentForecast().start()
 
-# Update the daily weather notification; used as a scheduled task so that when I say good morning to Banyan
-# it automatically tells me the current weather and forecast
 
+# Save the application state; happens every 30 seconds
+def save_the_application_state(app_state):
+    app_state.save_application_state()
+
+
+
+# Reset the user greeting; checks every 10 minutes but resets once per day
+def reset_user_greeted(app_state):
+    if str(strftime('%Y-%m-%d')) > app_state.date_of_last_weather_notification and app_state.user_greeted is True:
+        app_state.user_greeted = False
+
+
+##
+# Banyan
+##
 
 class Banyan(cmd.Cmd):
     intro = 'Welcome to Banyan. Type help or ? to list commands.\n'
@@ -56,16 +73,13 @@ class Banyan(cmd.Cmd):
     app_state = AppState()
     scheduler = BackgroundScheduler()
 
-    # When Banyan starts restore the application state, start the background job scheduler, and greet the user
+    # When Banyan starts restore the application state, start the background job scheduler with the jobs, and greet the user
     def preloop(self):
-        # Restore the application state
         self.app_state.restore_application_state()
-        print("preloop - date_of_last_weather_notification: {}".format(self.app_state.date_of_last_weather_notification))
-        # self.app_state.date_of_last_weather_notification = '2015-01-15'
-        # Start the task scheduler to get the current forecast. Run it every 30 minutes (1800 seconds)
         self.scheduler.add_job(get_the_weather_forecast, 'interval', seconds=1800)
+        self.scheduler.add_job(save_the_application_state, trigger='interval', kwargs={"app_state":self.app_state}, seconds=60)
+        self.scheduler.add_job(reset_user_greeted, trigger='interval', kwargs={"app_state":self.app_state}, seconds=600)
         self.scheduler.start()
-        # Greet the user
         greet_the_user(self.app_state)
 
     # On exit, save the application state and say goodbye
