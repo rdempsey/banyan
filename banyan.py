@@ -13,6 +13,7 @@ import time
 from bin.Greeting import *
 from bin.AppState import *
 from bin.Weather import *
+from bin.Mailer import *
 from apscheduler.schedulers.background import BackgroundScheduler
 from birdy.twitter import UserClient
 
@@ -98,6 +99,11 @@ class Banyan(cmd.Cmd):
         elif arg.lower() == "forecast":
             SayCurrentForecast().start()
 
+    def do_check(self, arg):
+        if arg.lower() == "email":
+            SayGmailCount().start()
+            SayADSCount().start()
+            SayDC2Count().start()
 
     def do_restart(self, arg):
         'Immediately saves the application state and restarts Banyan: RESTART'

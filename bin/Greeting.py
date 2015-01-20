@@ -10,6 +10,7 @@ from os import system
 from time import strftime
 from peak.rules import abstract, when, around, before, after
 from bin.Weather import *
+from bin.Mailer import *
 
 
 class Greeting:
@@ -48,7 +49,11 @@ class Greeting:
     def weather_greeting(self, app_state):
         SayCurrentWeather().start()
         SayCurrentForecast().start()
+        SayGmailCount().start()
+        SayADSCount().start()
+        SayDC2Count().start()
         app_state.date_of_last_weather_notification = str(time.strftime("%Y-%m-%d"))
+
 
 
 if __name__ == '__main__':
