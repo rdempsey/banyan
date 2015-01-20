@@ -10,10 +10,12 @@ from os import system
 import os
 import cmd
 import time
+import webbrowser
 from bin.Greeting import *
 from bin.AppState import *
 from bin.Weather import *
 from bin.Mailer import *
+from bin.google import search
 from apscheduler.schedulers.background import BackgroundScheduler
 from birdy.twitter import UserClient
 
@@ -57,7 +59,6 @@ def save_the_application_state(app_state):
     app_state.save_application_state()
 
 
-
 # Reset the user greeting; checks every 10 minutes but resets once per day
 def reset_user_greeted(app_state):
     if str(strftime('%Y-%m-%d')) > app_state.date_of_last_weather_notification and app_state.user_greeted is True:
@@ -74,7 +75,6 @@ class Banyan(cmd.Cmd):
     app_state = AppState()
     scheduler = BackgroundScheduler()
 
-    # When Banyan starts restore the application state, start the background job scheduler with the jobs, and greet the user
     def preloop(self):
         self.app_state.restore_application_state()
         self.scheduler.add_job(get_the_weather_forecast, 'interval', seconds=1800)
@@ -83,37 +83,43 @@ class Banyan(cmd.Cmd):
         self.scheduler.start()
         greet_the_user(self.app_state)
 
-    # On exit, save the application state and say goodbye
     def postloop(self):
         self.app_state.save_application_state()
         say_goodbye()
 
     def do_good(self, arg):
-        'Say hello to Banyan and Banyan will say hello to you: GOOD {morning|afternoon|evening}'
+        """Say hello to Banyan and Banyan will say hello to you: GOOD {morning|afternoon|evening}"""
         greet_the_user(self.app_state)
 
     def do_current(self, arg):
-        ' Get the current weather or the weather forecast for the day: CURRENT {weather|forecast}'
+        """Get the current weather or the weather forecast for the day: CURRENT {weather|forecast}"""
         if arg.lower() == "weather":
             SayCurrentWeather().start()
         elif arg.lower() == "forecast":
             SayCurrentForecast().start()
 
     def do_check(self, arg):
+        """Check email: CHECK {email}"""
         if arg.lower() == "email":
             SayGmailCount().start()
             SayADSCount().start()
             SayDC2Count().start()
 
+    def do_search(self, arg):
+        """Search Google for the given query and open the first 10 results in Chrome: SEARCH {query}"""
+        s_query = arg.lower()
+        for url in search(s_query, stop=10):
+            webbrowser.open_new_tab(url)
+
     def do_restart(self, arg):
-        'Immediately saves the application state and restarts Banyan: RESTART'
+        """Immediately saves the application state and restarts Banyan: RESTART"""
         config = get_app_config()
         file = config['FileLocations']['scripts'] + "restart.sh"
         self.app_state.save_application_state()
         os.execl(file, '')
 
     def do_bye(self, arg):
-        'Close Banyan and exit: GOODBYE'
+        """Close Banyan and exit: GOODBYE"""
         self.scheduler.shutdown()
         return True
 
