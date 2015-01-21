@@ -12,16 +12,9 @@ from bin.BanyanDB import *
 import threading
 import time
 from tzlocal import get_localzone
-import configparser
+from bin.configs import *
 
 single_lock = threading.Lock()
-
-
-# Return the application configuration
-def get_app_config():
-    config = configparser.ConfigParser(interpolation = configparser.ExtendedInterpolation())
-    config.read('config/config.ini')
-    return config
 
 
 # Get the path to the BanyanDB file

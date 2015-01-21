@@ -1,0 +1,25 @@
+#!/usr/bin/env python
+# encoding: utf-8
+"""
+configs.py
+Created by Robert Dempsey on 1/20/15.
+Copyright (c) 2015 Robert Dempsey. All rights reserved.
+"""
+
+import configparser
+
+
+# Get the application configuration
+def get_app_config():
+    config = configparser.ConfigParser(interpolation = configparser.ExtendedInterpolation())
+    config.read('config/config.ini')
+    return config
+
+
+# Given an app name it returns the path to the application
+def get_app_by_name(app_name):
+    config = get_app_config()
+    try:
+        return config.get('Apps', app_name)
+    except:
+        return None

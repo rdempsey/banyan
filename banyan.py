@@ -7,7 +7,6 @@ Copyright (c) 2015 Robert Dempsey. All rights reserved.
 """
 
 from os import system
-import os
 import cmd
 import time
 import webbrowser
@@ -16,14 +15,11 @@ from bin.AppState import *
 from bin.Weather import *
 from bin.Mailer import *
 from bin.google import search
+from bin.LocalApp import *
+from bin.configs import *
 from apscheduler.schedulers.background import BackgroundScheduler
 from birdy.twitter import UserClient
 
-# Get the application configuration
-def get_app_config():
-    config = configparser.ConfigParser(interpolation = configparser.ExtendedInterpolation())
-    config.read('config/config.ini')
-    return config
 
 # Get the user's greeting
 def get_users_greeting():
@@ -107,9 +103,15 @@ class Banyan(cmd.Cmd):
 
     def do_search(self, arg):
         """Search Google for the given query and open the first 10 results in Chrome: SEARCH {query}"""
-        s_query = arg.lower()
+        s_query = str(arg).lower()
         for url in search(s_query, stop=10):
             webbrowser.open_new_tab(url)
+
+    def do_launch(self, arg):
+        """Launch an application: LAUNCH {application-short-name}"""
+        l = LocalApp()
+        l.launch_application(arg)
+
 
     def do_restart(self, arg):
         """Immediately saves the application state and restarts Banyan: RESTART"""

@@ -15,16 +15,10 @@ from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import threading
-import configparser
+from bin.configs import *
 
 COMMASPACE = ', '
 single_lock = threading.Lock()
-
-# Get the application configuration
-def get_app_config():
-    config = configparser.ConfigParser(interpolation = configparser.ExtendedInterpolation())
-    config.read('config/config.ini')
-    return config
 
 
 # Get the count of unread emails for the Gmail account
