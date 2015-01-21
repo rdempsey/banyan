@@ -22,9 +22,7 @@ class LocalFile:
 
     def open_file(self, file_name):
         file_name = str(file_name).lower()
-        print(file_name)
         file_to_open = get_file_by_name(file_name)
-        print(file_to_open)
 
         if file_to_open is None:
             print("Unable to open {}".format(file_name))
