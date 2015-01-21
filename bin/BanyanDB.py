@@ -80,5 +80,22 @@ class BanyanDB:
         finally:
             conn.close()
 
+
+    # Given a file name it returns the path to the file
+    def get_file_by_name(self, file_name):
+        conn = sqlite3.connect(self.database)
+        cursor = conn.cursor()
+        try:
+            cursor.execute('SELECT * FROM local_files WHERE file_name=?',(file_name,))
+            f = cursor.fetchone()
+            if f is None:
+                return None
+            else:
+                return f[2]
+        except IOError:
+            return "Unable to connect to the Banyan database. Please check the settings and try again."
+        finally:
+            conn.close()
+
 if __name__ == '__main__':
     pass

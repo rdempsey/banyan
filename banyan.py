@@ -19,7 +19,6 @@ from bin.google import search
 from bin.LocalApp import *
 from bin.LocalFile import *
 from apscheduler.schedulers.background import BackgroundScheduler
-from birdy.twitter import UserClient
 
 
 # Get the greeting for the user

@@ -26,21 +26,3 @@ def get_banyan_db():
 def get_users_greeting():
     config = get_app_config()
     return config['Default']['greeting']
-
-
-# Given an app name it returns the path to the application
-def get_app_by_name(app_name):
-    config = get_app_config()
-    try:
-        return config.get('Apps', app_name)
-    except:
-        return None
-
-
-# Given a file name it returns the path to the file
-def get_file_by_name(file_name):
-    config = get_app_config()
-    try:
-        return config.get('Files', file_name)
-    except:
-        return None

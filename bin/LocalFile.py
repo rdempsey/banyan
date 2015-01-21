@@ -9,6 +9,7 @@ Copyright (c) 2015 Robert Dempsey. All rights reserved.
 import os
 import threading
 from bin.configs import *
+from bin.BanyanDB import BanyanDB
 
 
 # Open a file
@@ -21,8 +22,9 @@ class LocalFile:
         self.properties = kwargs
 
     def open_file(self, file_name):
-        file_name = str(file_name).lower()
-        file_to_open = get_file_by_name(file_name)
+        f = BanyanDB()
+        f.database = get_banyan_db()
+        file_to_open = f.get_file_by_name(str(file_name).lower())
 
         if file_to_open is None:
             print("Unable to open {}".format(file_name))
