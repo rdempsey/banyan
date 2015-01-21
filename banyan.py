@@ -22,12 +22,6 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from birdy.twitter import UserClient
 
 
-# Get the user's greeting
-def get_users_greeting():
-    config = get_app_config()
-    return config['Default']['greeting']
-
-
 # Get the greeting for the user
 def greet_the_user(app_state):
     current_time = int(time.strftime("%H"))

@@ -64,5 +64,21 @@ class BanyanDB:
         finally:
             conn.close()
 
+    # Given an app name it returns the path to the application
+    def get_app_by_name(self, app_name):
+        conn = sqlite3.connect(self.database)
+        cursor = conn.cursor()
+        try:
+            cursor.execute('SELECT * FROM local_apps WHERE app_name=?',(app_name,))
+            app = cursor.fetchone()
+            if app is None:
+                return None
+            else:
+                return app[2]
+        except IOError:
+            return "Unable to connect to the Banyan database. Please check the settings and try again."
+        finally:
+            conn.close()
+
 if __name__ == '__main__':
     pass

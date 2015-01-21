@@ -17,12 +17,6 @@ from bin.configs import *
 single_lock = threading.Lock()
 
 
-# Get the path to the BanyanDB file
-def get_banyan_db():
-    config = get_app_config()
-    return config['BanyanDatabase']['db']
-
-
 # Return a weather object
 def get_a_weather_object():
     config = get_app_config()

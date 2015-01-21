@@ -16,6 +16,18 @@ def get_app_config():
     return config
 
 
+# Get the path to the BanyanDB file
+def get_banyan_db():
+    config = get_app_config()
+    return config['BanyanDatabase']['db']
+
+
+# Get the user's greeting
+def get_users_greeting():
+    config = get_app_config()
+    return config['Default']['greeting']
+
+
 # Given an app name it returns the path to the application
 def get_app_by_name(app_name):
     config = get_app_config()

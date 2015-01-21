@@ -9,6 +9,7 @@ Copyright (c) 2015 Robert Dempsey. All rights reserved.
 import os
 import threading
 from bin.configs import *
+from bin.BanyanDB import BanyanDB
 
 
 # Launch an application
@@ -21,8 +22,9 @@ class LocalApp:
         self.properties = kwargs
 
     def launch_application(self, app_name):
-        app = str(app_name).lower()
-        app_to_launch = get_app_by_name(app)
+        a = BanyanDB()
+        a.database = get_banyan_db()
+        app_to_launch = a.get_app_by_name(str(app_name).lower())
 
         if app_to_launch is None:
             print("Unable to launch {}".format(app_name))
