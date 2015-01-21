@@ -24,7 +24,7 @@ class LocalApp:
         app = str(app_name).lower()
         app_to_launch = get_app_by_name(app)
 
-        if app_to_launch == None:
+        if app_to_launch is None:
             print("Unable to launch {}".format(app_name))
         else:
             t = threading.Thread(target=launch_app, kwargs={"app_to_launch":app_to_launch})

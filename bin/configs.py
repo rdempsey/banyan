@@ -23,3 +23,12 @@ def get_app_by_name(app_name):
         return config.get('Apps', app_name)
     except:
         return None
+
+
+# Given a file name it returns the path to the file
+def get_file_by_name(file_name):
+    config = get_app_config()
+    try:
+        return config.get('Files', file_name)
+    except:
+        return None

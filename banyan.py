@@ -10,13 +10,14 @@ from os import system
 import cmd
 import time
 import webbrowser
+from bin.configs import *
 from bin.Greeting import *
 from bin.AppState import *
 from bin.Weather import *
 from bin.Mailer import *
 from bin.google import search
 from bin.LocalApp import *
-from bin.configs import *
+from bin.LocalFile import *
 from apscheduler.schedulers.background import BackgroundScheduler
 from birdy.twitter import UserClient
 
@@ -108,9 +109,14 @@ class Banyan(cmd.Cmd):
             webbrowser.open_new_tab(url)
 
     def do_launch(self, arg):
-        """Launch an application: LAUNCH {application-short-name}"""
+        """Launch an application listed in the config file: LAUNCH {application-name}"""
         l = LocalApp()
         l.launch_application(arg)
+
+    def do_open(self, arg):
+        """Open a file listed in the config file: OPEN {file-name}"""
+        f = LocalFile()
+        f.open_file(arg)
 
 
     def do_restart(self, arg):
