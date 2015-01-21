@@ -13,24 +13,30 @@
           while others require the current process to finish first.
 
     1. Say good {morning, afternoon, evening} at the appropriate time.
-    2. If it's the morning and the first time Banyan has been run, you'll be told the current weather and the forecast for the day
-    3. Restart Banyan with a command, saving application state before the restart.
-    4. Provide the current weather report from Forecast.io
-    5. Provide the current day's weather forecast from Forecast.io
-    6. Checks every 30 minutes for the current weather forecast. If we already have it keep going; if not get it and save it
+    2. If it's the morning and Banyan hasn't said hello yet, you'll be told good morning along with the current weather 
+       and the forecast for the day.
+    3. Restart Banyan with the restart command, saving application state before the restart.
+    4. Provide the current weather report from Forecast.io.
+    5. Provide the current day's weather forecast from Forecast.io.
+    6. Checks every 30 minutes for the current weather forecast. If we already have it keep going; if not get it and save it.
+    7. Saves app state every 30 seconds and on program exit.
+    8. Search Google and open the first 10 results in Chrome.
+    9. Launch an application listed in the config file.
+   10. Open a file listed in the config file.
 
 
 ## Functionality On The Agenda
 
-    1. Use the user_greeted portion of the app_state so that we don't greet a user on restart. Set it to False if shutting down.
-    2. Add alerting via SMS
-    3. Send an SMS alert when an application error occurs
-    4. Have Banyan run as a daemon that can be started, stopped and reloaded (once voice commands are possible)
+    1. Add alerting via SMS
+    2. Send an SMS alert when an application error occurs
+    3. Have Banyan run as a daemon that can be started, stopped and reloaded (once voice commands are possible)
     
 
 ## Daily Scheduled Tasks
 
-    * coming soon
+    1. Get the current weather forecast; every 30 minutes
+    2. Save the application state; every 30 seconds
+    3. Reset the user greeted boolean; every 10 minutes
 
 
 ## Requirements
