@@ -21,10 +21,12 @@ class LocalApp:
     def __init__(self, **kwargs):
         self.properties = kwargs
 
+    lower = str.lower
+
     def launch_application(self, app_name):
         a = BanyanDB()
         a.database = get_banyan_db()
-        app_to_launch = a.get_app_by_name(str(app_name).lower())
+        app_to_launch = a.get_app_by_name(LocalApp.lower(app_name))
 
         if app_to_launch is None:
             print("Unable to launch {}".format(app_name))

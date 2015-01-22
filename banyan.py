@@ -67,6 +67,9 @@ class Banyan(cmd.Cmd):
     app_state = AppState()
     scheduler = BackgroundScheduler()
 
+    lower = str.lower
+
+    # Do these when Banyan starts
     def preloop(self):
         self.app_state.restore_application_state()
         self.scheduler.add_job(get_the_weather_forecast, 'interval', seconds=1800)
@@ -75,6 +78,7 @@ class Banyan(cmd.Cmd):
         self.scheduler.start()
         greet_the_user(self.app_state)
 
+    # Do these when Banyan closes
     def postloop(self):
         self.app_state.save_application_state()
         say_goodbye()
@@ -85,21 +89,21 @@ class Banyan(cmd.Cmd):
 
     def do_current(self, arg):
         """Get the current weather or the weather forecast for the day: CURRENT {weather|forecast}"""
-        if arg.lower() == "weather":
+        if Banyan.lower(arg) == "weather":
             SayCurrentWeather().start()
-        elif arg.lower() == "forecast":
+        elif Banyan.lower(arg) == "forecast":
             SayCurrentForecast().start()
 
     def do_check(self, arg):
         """Check email: CHECK {email}"""
-        if arg.lower() == "email":
+        if Banyan.lower(arg) == "email":
             SayGmailCount().start()
             SayADSCount().start()
             SayDC2Count().start()
 
     def do_search(self, arg):
         """Search Google for the given query and open the first 10 results in Chrome: SEARCH {query}"""
-        s_query = str(arg).lower()
+        s_query = Banyan.lower(arg)
         for url in search(s_query, stop=10):
             webbrowser.open_new_tab(url)
 

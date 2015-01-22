@@ -115,13 +115,15 @@ class Weather:
     def timezone(self):
         del self.properties['timezone']
 
+    lower = str.lower
+
     # Get the current weather report from Forecast.io
     def get_the_current_weather_report(self):
         try:
             forecast = forecastio.load_forecast(self.api_key, self.latitude, self.longitude)
             c = forecast.currently()
             c_temp = round(c.temperature)
-            c_summary = c.summary.lower()
+            c_summary = Weather.lower(c.summary)
             c_precip = round(c.precipProbability * 100)
             return "It is currently {} degrees and {} with a {} percent chance of precipitation.".format(c_temp, c_summary, c_precip)
         except:
@@ -140,7 +142,7 @@ class Weather:
             try:
                 f = forecastio.load_forecast(self.api_key, self.latitude, self.longitude)
                 forecast = f.daily()
-                f_summary = forecast.data[0].summary[:-1].lower()
+                f_summary = Weather.lower(forecast.data[0].summary[:-1])
                 for ch in ['(', ')']:
                     if ch in f_summary:
                         f_summary = f_summary.replace(ch, ",")

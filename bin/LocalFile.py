@@ -21,10 +21,12 @@ class LocalFile:
     def __init__(self, **kwargs):
         self.properties = kwargs
 
+    lower = str.lower
+
     def open_file(self, file_name):
         f = BanyanDB()
         f.database = get_banyan_db()
-        file_to_open = f.get_file_by_name(str(file_name).lower())
+        file_to_open = f.get_file_by_name(LocalFile.lower(file_name))
 
         if file_to_open is None:
             print("Unable to open {}".format(file_name))
