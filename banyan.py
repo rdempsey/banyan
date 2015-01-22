@@ -6,6 +6,8 @@ Created by Robert Dempsey on 12/30/14.
 Copyright (c) 2015 Robert Dempsey. All rights reserved.
 """
 
+import rlcompleter, readline
+readline.parse_and_bind('tab:complete')
 from os import system
 import cmd
 import time
