@@ -56,7 +56,6 @@ def reset_user_greeted(app_state):
 # Banyan
 ##
 
-
 class Banyan(cmd.Cmd):
     prompt = 'Banyan > '
     app_state = AppState()
@@ -93,7 +92,6 @@ class Banyan(cmd.Cmd):
         """Clear the console: CLEAR"""
         clear = lambda: system('clear')
         clear()
-
 
     def do_bye(self, arg):
         """Close Banyan and exit: GOODBYE"""

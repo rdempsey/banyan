@@ -7,12 +7,11 @@ Copyright (c) 2015 Robert Dempsey. All rights reserved.
 """
 
 from pyparsing import *
-import webbrowser
-from bin.google import search
 from bin.LocalApp import *
 from bin.LocalFile import *
 from bin.Mailer import *
 from bin.Weather import *
+from bin.WebSearch import *
 
 
 class BanyanParser:
@@ -87,14 +86,15 @@ class BanyanParser:
                     f = LocalFile()
                     f.open_file(c.name)
                 else:
+                    #TODO: add open project
                     print("{}: {} - {}".format(c.command, c.act_on, c.name))
             elif w[0] == "search":
                 s = create_open_search.parseString(input)
                 if s.act_on == "web":
-                    for url in search(s.name, stop=10):
-                        webbrowser.open_new_tab(url)
+                    ws = WebSearch()
+                    ws.perform_search(s.name)
                 elif s.act_on == "locally":
-                    #TODO: add this functionality
+                    #TODO: add local searching
                     pass
             elif w[0] == "get":
                 g = get.parseString(input)
@@ -107,6 +107,7 @@ class BanyanParser:
                 print("email: {}, subject: {}".format(e.email_to, e.email_subject))
             elif w[0] == "tweet":
                 t = tweet.parseString(input)
+                #TODO: add tweeting
                 print( "tweet: {}".format(t.tweet))
             elif w[0] == "launch":
                 l = launch_check.parseString(input)
