@@ -123,7 +123,7 @@ class Weather:
             forecast = forecastio.load_forecast(self.api_key, self.latitude, self.longitude)
             c = forecast.currently()
             c_temp = round(c.temperature)
-            c_summary = Weather.lower(c.summary)
+            c_summary = c.summary.lower()
             c_precip = round(c.precipProbability * 100)
             return "It is currently {} degrees and {} with a {} percent chance of precipitation.".format(c_temp, c_summary, c_precip)
         except:
@@ -142,7 +142,7 @@ class Weather:
             try:
                 f = forecastio.load_forecast(self.api_key, self.latitude, self.longitude)
                 forecast = f.daily()
-                f_summary = Weather.lower(forecast.data[0].summary[:-1])
+                f_summary = forecast.data[0].summary[:-1].lower()
                 for ch in ['(', ')']:
                     if ch in f_summary:
                         f_summary = f_summary.replace(ch, ",")

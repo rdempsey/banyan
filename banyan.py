@@ -11,15 +11,10 @@ readline.parse_and_bind('tab:complete')
 from os import system
 import cmd
 import time
-import webbrowser
 from bin.configs import *
 from bin.Greeting import *
 from bin.AppState import *
-from bin.Weather import *
-from bin.Mailer import *
-from bin.google import search
-from bin.LocalApp import *
-from bin.LocalFile import *
+from bin.BanyanParser import *
 from apscheduler.schedulers.background import BackgroundScheduler
 
 
@@ -61,8 +56,8 @@ def reset_user_greeted(app_state):
 # Banyan
 ##
 
+
 class Banyan(cmd.Cmd):
-    intro = 'Welcome to Banyan. Type help or ? to list commands.\n'
     prompt = 'Banyan > '
     app_state = AppState()
     scheduler = BackgroundScheduler()
@@ -87,37 +82,6 @@ class Banyan(cmd.Cmd):
         """Say hello to Banyan and Banyan will say hello to you: GOOD {morning|afternoon|evening}"""
         greet_the_user(self.app_state)
 
-    def do_current(self, arg):
-        """Get the current weather or the weather forecast for the day: CURRENT {weather|forecast}"""
-        if Banyan.lower(arg) == "weather":
-            SayCurrentWeather().start()
-        elif Banyan.lower(arg) == "forecast":
-            SayCurrentForecast().start()
-
-    def do_check(self, arg):
-        """Check email: CHECK {email}"""
-        if Banyan.lower(arg) == "email":
-            SayGmailCount().start()
-            SayADSCount().start()
-            SayDC2Count().start()
-
-    def do_search(self, arg):
-        """Search Google for the given query and open the first 10 results in Chrome: SEARCH {query}"""
-        s_query = Banyan.lower(arg)
-        for url in search(s_query, stop=10):
-            webbrowser.open_new_tab(url)
-
-    def do_launch(self, arg):
-        """Launch an application listed in the config file: LAUNCH {application-name}"""
-        l = LocalApp()
-        l.launch_application(arg)
-
-    def do_open(self, arg):
-        """Open a file listed in the config file: OPEN {file-name}"""
-        f = LocalFile()
-        f.open_file(arg)
-
-
     def do_restart(self, arg):
         """Immediately saves the application state and restarts Banyan: RESTART"""
         config = get_app_config()
@@ -125,10 +89,21 @@ class Banyan(cmd.Cmd):
         self.app_state.save_application_state()
         os.execl(file, '')
 
+    def do_clear(self, arg):
+        """Clear the console: CLEAR"""
+        clear = lambda: system('clear')
+        clear()
+
+
     def do_bye(self, arg):
         """Close Banyan and exit: GOODBYE"""
         self.scheduler.shutdown()
         return True
+
+    def default(self, arg):
+        p = BanyanParser()
+        p.input = arg
+        p.parse()
 
 
 def main():

@@ -49,9 +49,6 @@ class Greeting:
     def weather_greeting(self, app_state):
         SayCurrentWeather().start()
         SayCurrentForecast().start()
-        SayGmailCount().start()
-        SayADSCount().start()
-        SayDC2Count().start()
         app_state.date_of_last_weather_notification = str(time.strftime("%Y-%m-%d"))
 
 
