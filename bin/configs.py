@@ -9,20 +9,26 @@ Copyright (c) 2015 Robert Dempsey. All rights reserved.
 import configparser
 
 
-# Get the application configuration
 def get_app_config():
+    """Get the application configuration"""
     config = configparser.ConfigParser(interpolation = configparser.ExtendedInterpolation())
     config.read('config/config.ini')
     return config
 
 
-# Get the path to the BanyanDB file
 def get_banyan_db():
+    """Get the path to the BanyanDB file"""
     config = get_app_config()
     return config['BanyanDatabase']['db']
 
 
-# Get the user's greeting
 def get_users_greeting():
+    """Get the user's greeting"""
     config = get_app_config()
     return config['Default']['greeting']
+
+
+def get_project_path():
+    """Get the project path"""
+    config = get_app_config()
+    return config['FileLocations']['project_path']

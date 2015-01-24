@@ -12,6 +12,7 @@ from bin.LocalFile import *
 from bin.Mailer import *
 from bin.Weather import *
 from bin.WebSearch import *
+from bin.LocalProject import *
 
 
 class BanyanParser:
@@ -71,9 +72,12 @@ class BanyanParser:
             w = command.parseString(input)
             if w[0] == "create":
                 c = create_open_search.parseString(input)
-                print("{}: {} - {}".format(c.command, c.act_on, c.name))
-                #TODO: add create project
-                #TODO: add create file
+                if c.act_on == "project":
+                    p = LocalProject()
+                    p.create_new_project(c.name)
+                elif c.act_on == "file":
+                    #TODO: add create file
+                    pass
             elif w[0] == "check":
                 chk = launch_check.parseString(input)
                 if chk.app == "email":
@@ -114,7 +118,7 @@ class BanyanParser:
                 la = LocalApp()
                 la.launch_application(l.app)
             else:
-                print("Please enter a valid command")
+                print("I don't know what you want me to do...")
         except:
             print("Please enter a valid command")
 
