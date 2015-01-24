@@ -10,7 +10,7 @@ import rlcompleter, readline
 readline.parse_and_bind('tab:complete')
 from os import system
 import cmd
-import time
+from time import strftime
 from bin.configs import *
 from bin.Greeting import *
 from bin.AppState import *
@@ -26,11 +26,6 @@ def greet_the_user(app_state):
     g = Greeting(app_state, current_time, current_date, greeting)
     g.greet_the_user(app_state)
 
-
-# Say goodbye to the user
-def say_goodbye():
-    greeting = get_users_greeting()
-    system('say Good bye {}'.format(greeting))
 
 ##
 # Scheduled Tasks
@@ -65,6 +60,7 @@ class Banyan(cmd.Cmd):
 
     # Do these when Banyan starts
     def preloop(self):
+        """Actions to take when Banyan starts"""
         self.app_state.restore_application_state()
         self.scheduler.add_job(get_the_weather_forecast, 'interval', seconds=1800)
         self.scheduler.add_job(save_the_application_state, trigger='interval', kwargs={"app_state":self.app_state}, seconds=60)
@@ -72,14 +68,18 @@ class Banyan(cmd.Cmd):
         self.scheduler.start()
         greet_the_user(self.app_state)
 
-    # Do these when Banyan closes
+
     def postloop(self):
+        """Actions to take when Banyan closes"""
         self.app_state.save_application_state()
-        say_goodbye()
+        greeting = get_users_greeting()
+        system('say Good bye {}'.format(greeting))
+
 
     def do_good(self, arg):
         """Say hello to Banyan and Banyan will say hello to you: GOOD {morning|afternoon|evening}"""
         greet_the_user(self.app_state)
+
 
     def do_restart(self, arg):
         """Immediately saves the application state and restarts Banyan: RESTART"""
