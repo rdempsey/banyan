@@ -6,6 +6,7 @@ Created by Robert Dempsey on 1/24/15.
 Copyright (c) 2015 Robert Dempsey. All rights reserved.
 """
 
+from os import system
 import webbrowser
 from bin.google import search
 import threading
@@ -22,6 +23,7 @@ class WebSearch:
     def __search_the_web(self, query):
         for url in search(query, stop=10):
             webbrowser.open_new_tab(url)
+        system("say Web search complete.")
 
 
 

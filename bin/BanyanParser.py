@@ -73,8 +73,10 @@ class BanyanParser:
             if w[0] == "create":
                 c = create_open_search.parseString(input)
                 if c.act_on == "project":
+                    os.system("say Shall I store the project in a private repo?")
+                    save_in_github = raw_input("Save in Github > ")
                     p = LocalProject()
-                    p.create_new_project(c.name)
+                    p.create_new_project(c.name, save_in_github)
                 elif c.act_on == "file":
                     #TODO: add create file
                     pass

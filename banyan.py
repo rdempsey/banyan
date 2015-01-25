@@ -73,7 +73,7 @@ class Banyan(cmd.Cmd):
         """Actions to take when Banyan closes"""
         self.app_state.save_application_state()
         greeting = get_users_greeting()
-        system('say Good bye {}'.format(greeting))
+        system('say Goodbye {}'.format(greeting))
 
 
     def do_good(self, arg):
