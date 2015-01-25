@@ -14,6 +14,8 @@ from bin.Weather import *
 from bin.WebSearch import *
 from bin.LocalProject import *
 
+lower = str.lower
+
 
 class BanyanParser:
     def __init__(self, **kwargs):
@@ -31,7 +33,6 @@ class BanyanParser:
     @input.deleter
     def input(self):
         del self.properties['input']
-
 
     def parse(self):
         """
@@ -52,7 +53,7 @@ class BanyanParser:
 
         # Define grammar
         comma = Literal(",").suppress()
-        command = oneOf("check create open search get email tweet launch")
+        command = oneOf("check Check create Create open Open search Search get Get email Email tweet Tweet launch Launch")
         act_on = oneOf("project file web locally")
         command_object = OneOrMore(Word(alphas+"'."))
         what_time = oneOf("current today's tomorrow's")
@@ -70,7 +71,8 @@ class BanyanParser:
 
         try:
             w = command.parseString(input)
-            if w[0] == "create":
+            w_command = lower(w[0])
+            if w_command == "create":
                 c = create_open_search.parseString(input)
                 if c.act_on == "project":
                     os.system("say Shall I store the project in a private repo?")
@@ -80,13 +82,13 @@ class BanyanParser:
                 elif c.act_on == "file":
                     #TODO: add create file
                     pass
-            elif w[0] == "check":
+            elif w_command == "check":
                 chk = launch_check.parseString(input)
                 if chk.app == "email":
                     SayGmailCount().start()
                     SayADSCount().start()
                     SayDC2Count().start()
-            elif w[0] == "open":
+            elif w_command == "open":
                 c = create_open_search.parseString(input)
                 if c.act_on == "file":
                     f = LocalFile()
@@ -94,7 +96,7 @@ class BanyanParser:
                 else:
                     #TODO: add open project
                     pass
-            elif w[0] == "search":
+            elif w_command == "search":
                 s = create_open_search.parseString(input)
                 if s.act_on == "web":
                     ws = WebSearch()
@@ -102,20 +104,20 @@ class BanyanParser:
                 elif s.act_on == "locally":
                     #TODO: add local searching
                     pass
-            elif w[0] == "get":
+            elif w_command == "get":
                 g = get.parseString(input)
                 if g.time == "current" and g.object == "weather":
                     SayCurrentWeather().start()
                 elif g.time == "current" and g.object == "forecast":
                     SayCurrentForecast().start()
-            elif w[0] == "email":
+            elif w_command == "email":
                 e = email.parseString(input)
                 print("email: {}, subject: {}".format(e.email_to, e.email_subject))
-            elif w[0] == "tweet":
+            elif w_command == "tweet":
                 #TODO: add tweeting
                 # t = tweet.parseString(input)
                 pass
-            elif w[0] == "launch":
+            elif w_command == "launch":
                 l = launch_check.parseString(input)
                 la = LocalApp()
                 la.launch_application(l.app)
