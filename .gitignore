@@ -62,3 +62,6 @@ config/app_state.db
 
 # PyCharm Files
 .idea
+
+# Local test files
+tests/
