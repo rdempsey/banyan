@@ -93,7 +93,7 @@ class BanyanParser:
                     f.open_file(c.name)
                 else:
                     #TODO: add open project
-                    print("{}: {} - {}".format(c.command, c.act_on, c.name))
+                    pass
             elif w[0] == "search":
                 s = create_open_search.parseString(input)
                 if s.act_on == "web":
@@ -112,9 +112,9 @@ class BanyanParser:
                 e = email.parseString(input)
                 print("email: {}, subject: {}".format(e.email_to, e.email_subject))
             elif w[0] == "tweet":
-                t = tweet.parseString(input)
                 #TODO: add tweeting
-                print( "tweet: {}".format(t.tweet))
+                # t = tweet.parseString(input)
+                pass
             elif w[0] == "launch":
                 l = launch_check.parseString(input)
                 la = LocalApp()

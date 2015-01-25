@@ -6,11 +6,13 @@ Created by Robert Dempsey on 1/20/15.
 Copyright (c) 2015 Robert Dempsey. All rights reserved.
 """
 
-from os import system, path
+from os import system
 import threading
 from bin.configs import *
 from bin.BanyanDB import BanyanDB
 
+def open_local_file(file_name):
+    system("open '{}'".format(file_name))
 
 class LocalFile:
     def __init__(self, **kwargs):
@@ -27,15 +29,9 @@ class LocalFile:
         if file_to_open is None:
             print("Unable to open {}".format(file_name))
         else:
-            t = threading.Thread(target=self.__open_local_file, kwargs={"file_name":file_to_open})
+            t = threading.Thread(target=open_local_file, kwargs={"file_name":file_to_open})
             t.daemon = True
             t.start()
-
-    def __open_local_file(file_name):
-        system("open '{}'".format(file_name))
-
-    def __create_local_file(file_name):
-        pass
 
 
 if __name__ == '__main__':
