@@ -103,12 +103,12 @@ class BanyanDB:
         cur = conn.cursor()
         try:
             cur.execute("SET search_path TO 'banyan';")
-            cur.execute("SELECT * FROM local_file WHERE file_name = %s;", (file_name,))
+            cur.execute("SELECT file_path FROM local_files WHERE file_name = %s;", (file_name,))
             app = cur.fetchone()
             if app is None:
                 return None
             else:
-                return app[2]
+                return app[0]
         except IOError:
             system("say I am unable to get file information from the Banyan database")
         finally:

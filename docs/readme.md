@@ -43,13 +43,12 @@
 ## Requirements
 
     * Python 2.7.x (2.7.9)
-    * SQLite: http://www.sqlite.org/ (3.8.7.4)
+    * Postgres: http://www.postgresql.org/ (>=9.4)
     * PEAK-Rules: http://peak.telecommunity.com/DevCenter/PEAK-Rules (0.5a1.dev-r2713)
     # configparser: https://pypi.python.org/pypi/configparser (3.3.0r2)
     * python-forecastio: https://pypi.python.org/pypi/python-forecastio (1.3.1)
     * apscheduler: https://pypi.python.org/pypi/APScheduler (3.0.1)
-    * sqlalchemy: http://www.sqlalchemy.org/ (0.9.7)
-    
+    * psycopg2: https://binstar.org/andrew-nguyen/psycopg2 (>=2.5.4)
 
 ## How To Set Up Voice Recognition
 

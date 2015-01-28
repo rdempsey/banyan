@@ -65,3 +65,6 @@ config/app_state.db
 
 # Local test files
 tests/
+
+# Random stuff I've found
+.DS_Store
