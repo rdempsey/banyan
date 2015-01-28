@@ -6,9 +6,9 @@ Created by Robert Dempsey on 12/30/14.
 Copyright (c) 2014 Robert Dempsey. All rights reserved.
 """
 
-import sqlite3
-from datetime import datetime
+import psycopg2
 from time import strftime
+from os import system
 
 class BanyanDB:
     def __init__(self, **kwargs):
@@ -29,71 +29,88 @@ class BanyanDB:
 
     # Save a forecast in the database
     def save_todays_forecast(self, forecast, weather):
-        conn = sqlite3.connect(self.database)
-        cursor = conn.cursor()
         today = strftime("%Y-%m-%d")
 
-        now = str(datetime.now())
         try:
-            cursor.execute('SELECT * FROM daily_forecasts WHERE date=?', (today,))
-            chk = cursor.fetchone()
+            conn = psycopg2.connect(database="robertdempsey", user="robertdempsey", password="", host="localhost")
+        except:
+            system("say I'm unable to connect to the Banyan database")
+
+        try:
+            cur = conn.cursor()
+            cur.execute("SET search_path TO 'banyan';")
+            cur.execute("SELECT * from daily_forecasts WHERE forecast_date = %s", (today,))
+            chk = cur.fetchone()
             if chk is None:
-                cursor.execute("INSERT INTO daily_forecasts (date, forecast, latitude, longitude, timezone, created_at, updated_at) VALUES (?,?,?,?,?,?,?)", (today,forecast,weather.latitude,weather.longitude,weather.timezone,now,now))
-                conn.commit()
+                cur.execute("INSERT INTO daily_forecasts (forecast_date, forecast, latitude, longitude, timezone) VALUES (%s,%s,%s,%s,%s)", (today,forecast,weather.latitude,weather.longitude,weather.timezone,))
         except IOError:
-            return "Unable to insert the forecast into the database."
+            system("say I am unable to save the forecast to the Banyan database")
+            print("I am unable to save the forecast to the Banyan database")
         finally:
             conn.close()
             return "Forecast saved"
 
     # Get the current day's weather forecast from the database; return none if none is found
     def get_todays_weather_forecast(self):
-        conn = sqlite3.connect(self.database)
-        cursor = conn.cursor()
         today = strftime("%Y-%m-%d")
 
         try:
-            cursor.execute('SELECT forecast FROM daily_forecasts WHERE date=?', (today,))
-            forecast = cursor.fetchone()
+            conn = psycopg2.connect(database="robertdempsey", user="robertdempsey", password="", host="localhost")
+        except:
+            system("say I'm unable to connect to the Banyan database")
+
+        try:
+            cur = conn.cursor()
+            cur.execute("SET search_path TO 'banyan';")
+            cur.execute("SELECT forecast FROM daily_forecasts WHERE forecast_date = %s;", (today,))
+            forecast = cur.fetchone()
             if forecast is None:
                 return None
             else:
                 return forecast[0]
         except IOError:
-            return "Unable to connect to the Banyan database. Please check the settings and try again."
-        finally:
-            conn.close()
+            system("say I am unable to get today's weather from the Banyan database")
+        conn.close()
 
     # Given an app name it returns the path to the application
     def get_app_by_name(self, app_name):
-        conn = sqlite3.connect(self.database)
-        cursor = conn.cursor()
         try:
-            cursor.execute('SELECT * FROM local_apps WHERE app_name=?',(app_name,))
-            app = cursor.fetchone()
+            conn = psycopg2.connect(database="robertdempsey", user="robertdempsey", password="", host="localhost")
+        except:
+            system("say I'm unable to connect to the Banyan database")
+        cur = conn.cursor()
+        try:
+            cur.execute("SET search_path TO 'banyan';")
+            cur.execute("SELECT * FROM local_apps WHERE app_name = %s;", (app_name,))
+            app = cur.fetchone()
             if app is None:
                 return None
             else:
                 return app[2]
         except IOError:
-            return "Unable to connect to the Banyan database. Please check the settings and try again."
+            system("say I am unable to get application information from the Banyan database")
         finally:
             conn.close()
 
 
+
     # Given a file name it returns the path to the file
     def get_file_by_name(self, file_name):
-        conn = sqlite3.connect(self.database)
-        cursor = conn.cursor()
         try:
-            cursor.execute('SELECT * FROM local_files WHERE file_name=?',(file_name,))
-            f = cursor.fetchone()
-            if f is None:
+            conn = psycopg2.connect(database="robertdempsey", user="robertdempsey", password="", host="localhost")
+        except:
+            system("say I'm unable to connect to the Banyan database")
+        cur = conn.cursor()
+        try:
+            cur.execute("SET search_path TO 'banyan';")
+            cur.execute("SELECT * FROM local_file WHERE file_name = %s;", (file_name,))
+            app = cur.fetchone()
+            if app is None:
                 return None
             else:
-                return f[2]
+                return app[2]
         except IOError:
-            return "Unable to connect to the Banyan database. Please check the settings and try again."
+            system("say I am unable to get file information from the Banyan database")
         finally:
             conn.close()
 

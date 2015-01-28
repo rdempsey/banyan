@@ -21,8 +21,9 @@
     6. Checks every 30 minutes for the current weather forecast. If we already have it keep going; if not get it and save it.
     7. Saves app state every 30 seconds and on program exit.
     8. Search Google and open the first 10 results in Chrome.
-    9. Launch an application listed in the config file.
-   10. Open a file listed in the config file.
+    9. Launch an application listed in the database.
+   10. Open a file listed in the database
+   11. Create a new project, and optionally create a private Github repo for it
 
 
 ## Functionality On The Agenda

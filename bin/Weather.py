@@ -122,9 +122,9 @@ class Weather:
         try:
             forecast = forecastio.load_forecast(self.api_key, self.latitude, self.longitude)
             c = forecast.currently()
-            c_temp = round(c.temperature)
+            c_temp = int(round(c.temperature))
             c_summary = c.summary.lower()
-            c_precip = round(c.precipProbability * 100)
+            c_precip = int(round(c.precipProbability * 100))
             return "It is currently {} degrees and {} with a {} percent chance of precipitation.".format(c_temp, c_summary, c_precip)
         except:
             # TODO: handle the can't get to Forecast.io error
@@ -146,8 +146,8 @@ class Weather:
                 for ch in ['(', ')']:
                     if ch in f_summary:
                         f_summary = f_summary.replace(ch, ",")
-                f_min_temp = round(forecast.data[0].temperatureMin)
-                f_max_temp = round(forecast.data[0].temperatureMax)
+                f_min_temp = int(round(forecast.data[0].temperatureMin))
+                f_max_temp = int(round(forecast.data[0].temperatureMax))
                 t_forecast = "It is going to be {} with temperatures between {} and {} degrees.".format(f_summary, f_min_temp, f_max_temp)
                 # Save the forecast
                 d.save_todays_forecast(t_forecast, self)
