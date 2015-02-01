@@ -16,12 +16,6 @@ def get_app_config():
     return config
 
 
-def get_banyan_db():
-    """Get the path to the BanyanDB file"""
-    config = get_app_config()
-    return config['BanyanDatabase']['db']
-
-
 def get_users_greeting():
     """Get the user's greeting"""
     config = get_app_config()

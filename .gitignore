@@ -60,6 +60,9 @@ databases/
 config/config.ini
 config/app_state.db
 
+# Logs
+logs/*
+
 # PyCharm Files
 .idea
 

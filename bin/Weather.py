@@ -8,14 +8,15 @@ Copyright (c) 2014 Robert Dempsey. All rights reserved.
 
 from os import system
 import forecastio
-from bin.BanyanDB import *
 import threading
 import time
+import logging
+import logging.config
 from tzlocal import get_localzone
+from bin.BanyanDB import *
 from bin.configs import *
 
 single_lock = threading.Lock()
-
 
 # Return a weather object
 def get_a_weather_object():
@@ -32,6 +33,10 @@ def get_a_weather_object():
 class SayCurrentWeather(threading.Thread):
     # Get the current weather report
     def run(self):
+        logging.config.fileConfig('config/banyan-logger.conf',
+                                  {"logging_server" : "localhost"})
+        log = logging.getLogger('banyan-weather-logger')
+        log.info("Saying the current weather report")
         single_lock.acquire()
         w = get_a_weather_object()
         system('say {}'.format(w.get_the_current_weather_report()))
@@ -42,10 +47,13 @@ class SayCurrentWeather(threading.Thread):
 class SayCurrentForecast(threading.Thread):
     # Get the current weather report
     def run(self):
+        logging.config.fileConfig('config/banyan-logger.conf',
+                                  {"logging_server" : "localhost"})
+        log = logging.getLogger('banyan-weather-logger')
+        log.info("Saying the current weather forecast")
         single_lock.acquire()
-        db = get_banyan_db()
         w = get_a_weather_object()
-        system('say {}'.format(w.get_the_current_forecast(db)))
+        system('say {}'.format(w.get_the_current_forecast()))
         single_lock.release()
 
 
@@ -53,15 +61,17 @@ class SayCurrentForecast(threading.Thread):
 class GetCurrentForecast(threading.Thread):
     # Get the current weather report
     def run(self):
-        db = get_banyan_db()
         w = get_a_weather_object()
-        w.get_the_current_forecast(db)
+        w.get_the_current_forecast()
 
 
 # Weather class
 class Weather:
     def __init__(self, **kwargs):
         self.properties = kwargs
+        logging.config.fileConfig('config/banyan-logger.conf',
+                                  {"logging_server" : "localhost"})
+        self.log = logging.getLogger('banyan-weather-logger')
 
     # Forecast.io API Key
     @property
@@ -120,6 +130,7 @@ class Weather:
     # Get the current weather report from Forecast.io
     def get_the_current_weather_report(self):
         try:
+            self.log.info("Retrieving the current weather report")
             forecast = forecastio.load_forecast(self.api_key, self.latitude, self.longitude)
             c = forecast.currently()
             c_temp = int(round(c.temperature))
@@ -128,18 +139,20 @@ class Weather:
             return "It is currently {} degrees and {} with a {} percent chance of precipitation.".format(c_temp, c_summary, c_precip)
         except:
             # TODO: handle the can't get to Forecast.io error
-            system('say Unable to retrieve the weather')
+            self.log.critical("Unable to retrieve the current weather report")
+            system('say I am unable to retrieve the current weather report')
             pass
 
     # Get the current forecast; if it's in the database use that, otherwise go to Forecast.io and get the latest
-    def get_the_current_forecast(self, database):
+    def get_the_current_forecast(self):
+        self.log.info("Getting the current weather forecast")
         # Check the database to see if we already have the current forecast
         d = BanyanDB()
-        d.database = database
         current_forecast = d.get_todays_weather_forecast()
         # If not, fetch it from Forecast.io, save it and return it
         if current_forecast is None:
             try:
+                self.log.info("Retrieving the current weather forecast")
                 f = forecastio.load_forecast(self.api_key, self.latitude, self.longitude)
                 forecast = f.daily()
                 f_summary = forecast.data[0].summary[:-1].lower()
@@ -155,7 +168,8 @@ class Weather:
                 return t_forecast
             except:
                 # TODO: handle can't get to Forecast.io error
-                system('say Unable to retrieve the weather')
+                self.log.critical("Unable to retrieve the current weather forecast")
+                system('say I am unable to retrieve the current weather forecast')
                 pass
         else:
             return current_forecast
