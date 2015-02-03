@@ -8,9 +8,8 @@ Copyright (c) 2015 Robert Dempsey. All rights reserved.
 
 from os import system
 import threading
-import logging
-import logging.config
 from bin.BanyanDB import BanyanDB
+from bin.banyan_logger import log_message
 
 def open_local_file(file_name):
     system("open '{}'".format(file_name))
@@ -18,9 +17,6 @@ def open_local_file(file_name):
 class LocalFile:
     def __init__(self, **kwargs):
         self.properties = kwargs
-        logging.config.fileConfig('config/banyan-logger.conf',
-                                  {"logging_server" : "localhost"})
-        self.log = logging.getLogger('banyan-file-logger')
 
     lower = str.lower
 
@@ -30,10 +26,10 @@ class LocalFile:
         file_to_open = f.get_file_by_name(LocalFile.lower(file_name))
 
         if file_to_open is None:
-            self.log.critical("Unable to open file: {}".format(file_name))
+            log_message("LocalFile/OpenFile", "unable to open file {}".format(file_name))
             system("say I am unable to open file {}".format(file_name))
         else:
-            self.log.info("Opening file: {}".format(file_name))
+            log_message("LocalApp/OpenFile", "Opening file: {}".format(file_name))
             t = threading.Thread(target=open_local_file, kwargs={"file_name":file_to_open})
             t.daemon = True
             t.start()

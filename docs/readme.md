@@ -24,6 +24,7 @@
     9. Launch an application listed in the database.
    10. Open a file listed in the database
    11. Create a new project, and optionally create a private Github repo for it
+   12. Everything is logged to a central logging server controlled by Banyan.
 
 
 ## Functionality On The Agenda

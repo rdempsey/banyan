@@ -8,6 +8,7 @@ Copyright (c) 2015 Robert Dempsey. All rights reserved.
 
 import shelve
 import os.path
+from bin.banyan_logger import log_message
 
 class AppState:
     def __init__(self, **kwargs):
@@ -45,6 +46,7 @@ class AppState:
 
     # Create an initial state file and set defaults
     def create_initial_state_file(self):
+        log_message("AppState/CreateInitalStateFile", "Creating the initial Banyan state file")
         shelf_file = shelve.open('config/app_state')
         shelf_file['date_of_last_weather_notification'] = '1900-01-01'
         shelf_file['user_greeted'] = False
@@ -52,6 +54,7 @@ class AppState:
 
     # Save the application state using shelve
     def save_application_state(self):
+        log_message("AppState/SaveApplicationState", "Saving the application state")
         shelf_file = shelve.open('config/app_state')
         shelf_file['date_of_last_weather_notification'] = self.date_of_last_weather_notification
         shelf_file['user_greeted'] = self.user_greeted
@@ -59,6 +62,7 @@ class AppState:
 
     # Restore the application state using shelve
     def restore_application_state(self):
+        log_message("AppState/RestoreApplicationState", "Restoring Banyan application state")
         shelf_file = shelve.open('config/app_state')
         self.date_of_last_weather_notification = shelf_file['date_of_last_weather_notification']
         self.user_greeted = shelf_file['user_greeted']

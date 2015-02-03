@@ -11,21 +11,17 @@ from threading import Thread
 from bin.configs import *
 from github import Github
 from github.GithubException import *
-import logging
-import logging.config
+from bin.banyan_logger import log_message
 
 class LocalProject:
     def __init__(self, **kwargs):
         self.properties = kwargs
-        logging.config.fileConfig('config/banyan-logger.conf',
-                                  {"logging_server" : "localhost"})
-        self.log = logging.getLogger('banyan-project-logger')
 
     lower = str.lower
 
     def create_new_project(self, project_name, save_in_github):
         """Create a new project"""
-        self.log.info("Creating project: ".format(project_name))
+        log_message("LocalProject/CreateNewProject", "Creating project: ".format(project_name))
         project_path = get_project_path() + project_name
         t = Thread(target=self.__create_project_folder, args=(project_name, project_path, save_in_github,))
         t.daemon = True
@@ -34,7 +30,7 @@ class LocalProject:
 
     def __create_project_folder(self, project_name, project_path, save_in_github):
         if LocalProject.lower(save_in_github) == "yes":
-            self.log.info("Creating a private Github repo for project {}".format(project_name))
+            log_message("LocalProject/CreateProjectFolder", "Creating a private Github repo for project {}".format(project_name))
             config = get_app_config()
             un = config['Github']['username']
             pw = config['Github']['password']
@@ -49,31 +45,32 @@ class LocalProject:
                                                     has_downloads=False,
                                                     auto_init=True)
             except GithubException:
-                self.log.critical("Unable to create a new repo in Github")
+                log_message("LocalProject/CreateProjectFolder", "Unable to create a new repo in Github")
                 system("say I was unable to create the new repo.")
 
             # Make the directory
             if not path.exists(project_path):
-                self.log.info("Creating the project folder")
+                log_message("LocalProject/CreateProjectFolder", "Creating the project folder")
                 makedirs(project_path)
             try:
                 # Initialize a git repo in the new directory
-                self.log.info("Initializing the git repo")
+                log_message("LocalProject/CreateProjectFolder", "Initializing the git repo")
                 system("cd {} && git init".format(project_path))
 
                 # Pull the repo into the new folder
-                self.log.info("Pulling the new project from the git repo")
+                log_message("LocalProject/CreateProjectFolder", "Pulling the new project from the git repo")
                 git_pull_url = "https://{}@github.com/rdempsey/{}.git".format(token, project_name)
                 system("cd {} && git pull {}".format(project_path, git_pull_url))
             except:
+                log_message("LocalProject/CreateProjectFolder", "Unable to pull the new repo")
                 system("say I was unable to pull the new repo")
         else:
             # Simply create the project
             if not path.exists(project_path):
-                self.log.info("Creating the project folder")
+                log_message("LocalProject/CreateProjectFolder", "Creating the project folder")
                 makedirs(project_path)
 
-        self.log.info("Project creation complete")
+        log_message("LocalProject/CreateProjectFolder", "Project creation complete")
         system("say Project creation complete")
 
 

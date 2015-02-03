@@ -8,9 +8,8 @@ Copyright (c) 2015 Robert Dempsey. All rights reserved.
 
 from os import system
 import threading
-import logging
-import logging.config
 from bin.BanyanDB import BanyanDB
+from bin.banyan_logger import *
 
 
 # Launch an application
@@ -21,9 +20,6 @@ def launch_app(app_to_launch):
 class LocalApp:
     def __init__(self, **kwargs):
         self.properties = kwargs
-        logging.config.fileConfig('config/banyan-logger.conf',
-                                  {"logging_server" : "localhost"})
-        self.log = logging.getLogger('banyan-app-logger')
 
     lower = str.lower
 
@@ -33,10 +29,10 @@ class LocalApp:
         app_to_launch = a.get_app_by_name(LocalApp.lower(app_name))
 
         if app_to_launch is None:
-            self.log.critical("Unable to launch application: {}".format(app_name))
+            log_message("LocalApp/LaunchApplication", "Unable to launch {}".format(app_name))
             system("say I am unable to launch {}".format(app_name))
         else:
-            self.log.info("Launching application: {}".format(app_name))
+            log_message("LocalApp/LaunchApplication", "Launching application: {}".format(app_name))
             t = threading.Thread(target=launch_app, kwargs={"app_to_launch":app_to_launch})
             t.daemon = True
             t.start()

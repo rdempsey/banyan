@@ -6,20 +6,15 @@ Created by Robert Dempsey on 1/26/15.
 Copyright (c) 2015 Robert Dempsey. All rights reserved.
 """
 
-import sys
-import os
-import unittest
+from bin.configs import *
+from birdy.twitter import UserClient
 
 
-class TweetCheck.py:
+class TweetCheck:
     def __init__(self, **kwargs):
         self.properties = kwargs
 
 
-class TweetCheck.pyTests(unittest.TestCase):
-    def setUp(self):
-        pass
-
 
 if __name__ == '__main__':
-    unittest.main()
+    pass
