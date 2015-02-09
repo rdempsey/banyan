@@ -45,11 +45,19 @@
 
     * Python 2.7.x (2.7.9)
     * Postgres: http://www.postgresql.org/ (>=9.4)
+    * Elasticsearch: http://www.elasticsearch.org/ (1.4.2)
+    * Logstash: http://logstash.net/ (1.4.2)
     * PEAK-Rules: http://peak.telecommunity.com/DevCenter/PEAK-Rules (0.5a1.dev-r2713)
     # configparser: https://pypi.python.org/pypi/configparser (3.3.0r2)
     * python-forecastio: https://pypi.python.org/pypi/python-forecastio (1.3.1)
     * apscheduler: https://pypi.python.org/pypi/APScheduler (3.0.1)
     * psycopg2: https://binstar.org/andrew-nguyen/psycopg2 (>=2.5.4)
+
+
+## Optional
+ 
+    * Kibana: http://www.elasticsearch.org/guide/en/kibana/current/index.html (3.1.2)
+
 
 ## How To Set Up Voice Recognition
 
