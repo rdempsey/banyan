@@ -6,6 +6,7 @@ Created by Robert Dempsey on 1/23/15.
 Copyright (c) 2015 Robert Dempsey. All rights reserved.
 """
 
+from os import system
 from pyparsing import *
 from bin.LocalApp import *
 from bin.LocalFile import *
@@ -75,7 +76,7 @@ class BanyanParser:
             if w_command == "create":
                 c = create_open_search.parseString(input)
                 if c.act_on == "project":
-                    os.system("say Shall I store the project in a private repo?")
+                    system("say Shall I store the project in a private repo?")
                     save_in_github = raw_input("Save in Github > ")
                     p = LocalProject()
                     p.create_new_project(c.name, save_in_github)
@@ -123,8 +124,9 @@ class BanyanParser:
                 la.launch_application(l.app)
             else:
                 print("I don't know what you want me to do...")
-        except:
-            print("Please enter a valid command")
+        except Exception as e:
+            system("say Please enter a valid command")
+            print("Error: {}".format(str(e)))
 
 
 
