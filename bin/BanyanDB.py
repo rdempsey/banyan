@@ -37,13 +37,13 @@ class BanyanDB:
             if chk is None:
                 log_message("BanyanDB/SaveTodaysForecast", "Saving the forecast to the Banyan database")
                 cur.execute("INSERT INTO daily_forecasts (forecast_date, forecast, latitude, longitude, timezone) VALUES (%s,%s,%s,%s,%s)", (today,forecast,weather.latitude,weather.longitude,weather.timezone,))
+                conn.commit()
         except IOError:
             log_message("BanyanDB/SaveTodaysForecast", "Unable to save the forecast to the Banyan database")
             system("say I am unable to save the forecast to the Banyan database")
         finally:
             log_message("BanyanDB/SaveTodaysForecast", self.closing_message)
             conn.close()
-            return "Forecast saved"
 
     # Get the current day's weather forecast from the database; return none if none is found
     def get_todays_weather_forecast(self):

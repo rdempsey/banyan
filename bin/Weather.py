@@ -14,6 +14,7 @@ from tzlocal import get_localzone
 from bin.BanyanDB import *
 from bin.configs import *
 from bin.banyan_logger import log_message
+from bin.text_cleaner import *
 
 single_lock = threading.Lock()
 
@@ -146,12 +147,13 @@ class Weather:
                 f = forecastio.load_forecast(self.api_key, self.latitude, self.longitude)
                 forecast = f.daily()
                 f_summary = forecast.data[0].summary[:-1].lower()
-                for ch in ['(', ')']:
-                    if ch in f_summary:
-                        f_summary = f_summary.replace(ch, ",")
+                # Update the string they gave us
+                f_summary = unicode_weather_cleaner(f_summary)
+                # Get the rest of the temps for the day
                 f_min_temp = int(round(forecast.data[0].temperatureMin))
                 f_max_temp = int(round(forecast.data[0].temperatureMax))
-                t_forecast = "It is going to be {} with temperatures between {} and {} degrees.".format(f_summary, f_min_temp, f_max_temp)
+                # Create the forecast
+                t_forecast = "It is going to be {} with temperatures between {} and {} degrees".format(f_summary, f_min_temp, f_max_temp)
                 # Save the forecast
                 d.save_todays_forecast(t_forecast, self)
                 # Return it
