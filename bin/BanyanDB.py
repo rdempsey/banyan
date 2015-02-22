@@ -73,35 +73,6 @@ class BanyanDB:
             log_message("BanyanDB/GetTodaysWeatherForecast", self.closing_message)
             conn.close()
 
-    # Given an app name it returns the path to the application
-    def get_app_by_name(self, app_name):
-        try:
-            log_message("BanyanDB/GetAppByName", self.connect_message)
-            conn = psycopg2.connect(database="robertdempsey", user="robertdempsey", password="", host="localhost")
-        except:
-            log_message("BanyanDB/GetAppByName", self.connection_error_message)
-            system("say I'm unable to connect to the Banyan database")
-
-        cur = conn.cursor()
-
-        try:
-            log_message("BanyanDB/GetAppByName", "Retrieving the path to application {} from the database".format(app_name))
-            cur.execute("SET search_path TO 'banyan';")
-            cur.execute("SELECT * FROM local_apps WHERE app_name = %s;", (app_name,))
-            app = cur.fetchone()
-            if app is None:
-                return None
-            else:
-                return app[2]
-        except IOError:
-            log_message("BanyanDB/GetAppByName", "Unable to retrieve the path to application {} from the Banyan database".format(app_name))
-            system("say I am unable to retrieve the application path from the Banyan database")
-        finally:
-            log_message("BanyanDB/GetAppByName", self.closing_message)
-            conn.close()
-
-
-
     # Given a file name it returns the path to the file
     def get_file_by_name(self, file_name):
         try:

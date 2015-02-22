@@ -54,7 +54,7 @@ class BanyanParser:
 
         # Define grammar
         comma = Literal(",").suppress()
-        command = oneOf("check Check create Create open Open search Search get Get email Email tweet Tweet launch Launch")
+        command = oneOf("check Check create Create open Open search Search get Get email Email tweet Tweet")
         act_on = oneOf("project file web locally")
         command_object = OneOrMore(Word(alphas+"'."))
         what_time = oneOf("current today's tomorrow's")
@@ -118,10 +118,6 @@ class BanyanParser:
                 #TODO: add tweeting
                 # t = tweet.parseString(input)
                 pass
-            elif w_command == "launch":
-                l = launch_check.parseString(input)
-                la = LocalApp()
-                la.launch_application(l.app)
             else:
                 print("I don't know what you want me to do...")
         except Exception as e:
