@@ -8,7 +8,6 @@ Copyright (c) 2015 Robert Dempsey. All rights reserved.
 
 from os import system
 from pyparsing import *
-from bin.LocalApp import *
 from bin.LocalFile import *
 from bin.Mailer import *
 from bin.Weather import *
@@ -94,17 +93,16 @@ class BanyanParser:
                 if c.act_on == "file":
                     f = LocalFile()
                     f.open_file(c.name)
-                else:
+                elif c.act_on == "project":
                     #TODO: add open project
+                    pass
+                else:
                     pass
             elif w_command == "search":
                 s = create_open_search.parseString(input)
                 if s.act_on == "web":
                     ws = WebSearch()
                     ws.perform_search(s.name)
-                elif s.act_on == "locally":
-                    #TODO: add local searching
-                    pass
             elif w_command == "get":
                 g = get.parseString(input)
                 if g.time == "current" and g.object == "weather":

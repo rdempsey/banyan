@@ -38,10 +38,9 @@ Note: Banyan currently takes the form of a multi-threaded console application. S
 6. Check every 30 minutes for the current weather forecast. If we already have it don't worry about it; if not get it and save it in the database.
 7. Save app state every 30 seconds and on program exit.
 8. Search Google and open the first 10 results in separate tabs in Chrome.
-9. Launch an application listed in the database.
-10. Open a file listed in the database.
-11. Create a new project, and optionally create a private Github repo for it.
-12. Log everything to a central logging server controlled by Banyan (using logstash and elasticsearch).
+9. Open a file listed in the database.
+10. Create a new project, and optionally create a private Github repo for it.
+11. Log everything to a central logging server controlled by Banyan (using logstash and elasticsearch).
 
 
 ## Functionality On The Agenda
